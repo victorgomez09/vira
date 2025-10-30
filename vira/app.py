@@ -1,3 +1,4 @@
+from asyncio import get_running_loop, sleep
 from typing import List, Dict, Any, Callable, Awaitable
 
 from vira.api_router import ApiRouter
@@ -5,6 +6,7 @@ from vira.exceptions import InvalidRequest
 from vira.http_responses import _ResponseData, BaseHTTPResponse, INTERNAL_SERVER_ERROR_TEXTResponse, NOT_FOUND_TEXTResponse
 from vira.request_data import RequestData
 from vira.router import Router
+from vira.background_tasks import _create_background_tasks_instance
 
 # ASGI type aliases
 ASGIScope = Dict[str, Any]
@@ -14,8 +16,9 @@ ASGISend = Callable[[Dict[str, Any]], Awaitable[None]]
 
 class Vira:
 
-    def __init__(self):
-        self.router = None
+    def __init__(self, max_running_tasks: int = 2):
+        self._router = None
+        self._bg_tasks = _create_background_tasks_instance(max_running_tasks=max_running_tasks)
 
     # Every time a request comes to server, the server will call the __call__ method of the class
     # The __call__ method is the entry point of the application
@@ -25,6 +28,9 @@ class Vira:
         # send - its an async function that send the response back to the client
         if scope["type"] == "http":
             return await self._handle_http_request(scope, receive, send)
+
+        if scope["type"] == "lifespan":
+            return await self._handle_lifespan(receive, send)
 
     def include_routes(self, routes: List[ApiRouter]) -> None:
         """
@@ -131,6 +137,27 @@ class Vira:
             "type": "http.response.body",
             "body": resp.body
         })
+        
+    async def _handle_lifespan(
+        self, receive: Callable[[], Awaitable[dict[str, Any]]],
+        send: Callable[[dict[str, Any]], Awaitable[None]]
+    ):
+        async def run_bg_tasks():
+            while True:
+                await self._bg_tasks.run_tasks()
+                await sleep(0.5)
+
+        running_loop = get_running_loop()
+        while True:
+            message = await receive()
+            if message["type"] == "lifespan.startup":
+                running_loop.create_task(run_bg_tasks())
+                await send({"type": "lifespan.startup.complete"})
+
+            elif message["type"] == "lifespan.shutdown":
+                await self._bg_tasks.shutdown()
+                await send({"type": "lifespan.shutdown.complete"})
+                return
 
 
 vira = Vira()

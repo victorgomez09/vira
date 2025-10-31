@@ -1,10 +1,6 @@
 # Vira 🚀
 
-A lightweight, educational ASGI web framework built from scratch with FastAPI-inspired design. Perfect for learning how modern web frameworks work under the hood.
-
-## 🎯 Purpose
-
-**Vira is designed for educational purposes** - to demonstrate and teach modern web framework concepts through clean, well-documented code that's easy to understand and extend.
+A lightweight and fast ASGI web framework built from scratch with FastAPI-inspired design.
 
 ## ✨ Features
 
@@ -47,16 +43,6 @@ vira/
 ├── testing/             # Test client & utilities
 └── status.py           # HTTP status codes
 ```
-
-## 🎓 Educational Value
-
-Vira is designed to be **easily understood and extended**:
-
-- **Clean Architecture**: Each component has a single responsibility
-- **Comprehensive Comments**: Extensive documentation explaining design decisions
-- **Modern Patterns**: Demonstrates async/await, type hints, protocols
-- **ASGI Implementation**: Shows how ASGI protocol works in practice
-- **Testing Examples**: Includes comprehensive test suite as learning material
 
 ## 📚 Learn More
 

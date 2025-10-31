@@ -2,8 +2,9 @@
 Vira - A simple ASGI framework for educational purposes.
 """
 
-from typing import Callable, Dict, Any, Awaitable, Union, Optional, Set, List
+from typing import Callable, Dict, Any, Awaitable, Type, Union, Optional, Set, List
 
+from vira.plugin import ViraPlugin
 from vira.state import State
 
 from .request import Request
@@ -43,6 +44,9 @@ class Vira:
         
         # Shared application state (in-process)
         self.state = State(initial_state)
+        
+        # Registered plugins
+        self.plugins: List[ViraPlugin] = []
 
         # Lifespan event handlers
         self._startup_handlers: List[Callable[[], Awaitable[None]]] = []
@@ -352,3 +356,20 @@ class Vira:
                 "more_body": False,
             }
         )
+
+        def add_plugin(self, plugin_cls: Type[ViraPlugin], **kwargs):
+            """
+            Registra e inicializa un plugin en la aplicación Vira.
+
+            Args:
+                plugin_cls: La clase del plugin (no la instancia).
+                **kwargs: Argumentos para el inicializador del plugin.
+            """
+            if self._middleware_built:
+                raise RuntimeError(
+                    "No se pueden añadir plugins después del inicio de la aplicación."
+                )
+
+            plugin_instance = plugin_cls(self, **kwargs)
+            plugin_instance.register()
+            self.plugins.append(plugin_instance)

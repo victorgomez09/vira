@@ -5,10 +5,15 @@ Request class for Vira framework.
 import json
 import urllib.parse
 import weakref
-from typing import Dict, Any, Optional, List, Callable, Awaitable
+from typing import Dict, Any, Optional, List, Callable, Awaitable, TYPE_CHECKING
 
 from .upload_file import UploadFile
 from .multipart.parser import MultipartParser
+from vira.state import State
+
+if TYPE_CHECKING:
+    # Import to avoid runtime cycles, only used for type checking
+    from vira import Vira
 
 
 class Request:
@@ -28,6 +33,10 @@ class Request:
     # Application-level configuration (set by Vira)
     max_in_memory_file_size: int = 1024 * 1024  # 1MB default
     temp_dir: Optional[str] = None
+
+    # Types added so that handlers and middleware can see that Request has a reference to the app and the state
+    app: Optional["Vira"]
+    state: Optional[State]
 
     def __init__(
         self,
@@ -54,6 +63,10 @@ class Request:
         self._cookies: Dict[str, str] | None = None
         self.path_params: Dict[str, Any] = {}  # Dynamic path parameters
         self._body_loaded = False
+
+        # Initialize attributes that can be filled by the application when building the Request
+        self.app = None
+        self.state = None
 
         # Add to cleanup registry
         Request._active_requests.add(self)

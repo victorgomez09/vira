@@ -4,6 +4,8 @@ Vira - A simple ASGI framework for educational purposes.
 
 from typing import Callable, Dict, Any, Awaitable, Union, Optional, Set, List
 
+from vira.state import State
+
 from .request import Request
 from .response import Response, text_response
 from .status import HTTPStatus
@@ -19,6 +21,7 @@ class Vira:
         api_router: Optional[APIRouter] = None,
         max_in_memory_file_size: int = 1024 * 1024,  # 1 MB default
         temp_dir: Optional[str] = None,
+        initial_state: Optional[Dict[str, Any]] = None,
     ):
         """Initialize the Vira application.
 
@@ -37,6 +40,9 @@ class Vira:
         # Configure Request class with application-level settings
         Request.max_in_memory_file_size = max_in_memory_file_size
         Request.temp_dir = temp_dir
+        
+        # Shared application state (in-process)
+        self.state = State(initial_state)
 
         # Lifespan event handlers
         self._startup_handlers: List[Callable[[], Awaitable[None]]] = []
@@ -298,6 +304,11 @@ class Vira:
         try:
             # Build Request object and load body from the ASGI receive channel
             request = await Request.from_asgi(scope, receive)
+            
+            # Attach application and shared state to the request so handlers/middleware
+            # can access app/state as `request.app` and `request.state` (similar to FastAPI)
+            request.app = self
+            request.state = self.state
 
             # Process request through pre-built middleware stack
             if self._app_with_middleware is None:

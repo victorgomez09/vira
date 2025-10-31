@@ -6,15 +6,26 @@ app = Vira(initial_state={"counter": 0, "db_url": "sqlite:///db.sqlite"})
 
 @app.get("/")
 async def index(request: Request):
-    # Access the application state via request.app.state
+    # Access the application state via app.state
     app.state.set("greeting", request.headers)
     return text_response(app.state.get("greeting", "Hello, World!"))
 
-@app.get("/incr")
-async def incr(request: Request):
+@app.get("/app-state")
+async def app_state():
+    # Access the application state via app.state
+    return text_response(app.state.get("greeting", "Hello, World!"))
+
+@app.get("/increment-counter")
+async def increment_counter(request: Request):
     # Access the application state via request.app.state or request.state
     # Use the incr() atomic method if State implements it (in-process)
     request.state.set("counter", request.state.get("counter", 0) + 1)
+    return text_response(f"counter incremented")
+
+@app.get("/show-counter")
+async def souw_counter(request: Request):
+    # Access the application state via request.app.state or request.state
+    # Use the incr() atomic method if State implements it (in-process)
     return text_response(f"counter={request.state.get('counter', 0)}")
 
 @app.get("/value")

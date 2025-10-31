@@ -5,8 +5,8 @@ Compatible with FastAPI middleware interfaces.
 
 from .cors import CORSMiddleware
 from .gzip import GZipMiddleware
-from .httpsredirect import HTTPSRedirectMiddleware
-from .trustedhost import TrustedHostMiddleware
+from .https_redirect import HTTPSRedirectMiddleware
+from .trusted_host import TrustedHostMiddleware
 from .exception import ExceptionMiddleware
 
 __all__ = [

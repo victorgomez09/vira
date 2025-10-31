@@ -19,7 +19,7 @@ from ...status import HTTPStatus
 
 if TYPE_CHECKING:  # pragma: no cover - only for type hints
     from ...request import Request
-    from ..middlewarechain import MiddlewareCallable
+    from ..middleware_chain import MiddlewareCallable
 
 
 class ExceptionMiddleware:

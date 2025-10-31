@@ -4,7 +4,7 @@ Compatible with FastAPI's TrustedHostMiddleware interface.
 """
 
 from typing import List, Optional, Callable, Awaitable
-from ..middlewarechain import MiddlewareCallable
+from ..middleware_chain import MiddlewareCallable
 from ...response import Response
 from ...request import Request
 

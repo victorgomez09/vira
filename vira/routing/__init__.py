@@ -9,7 +9,7 @@ Provides:
 """
 
 from .route import Route
-from .apirouter import APIRouter
+from .api_router import APIRouter
 
 __all__ = [
     "Route",

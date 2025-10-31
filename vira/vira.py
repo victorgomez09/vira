@@ -357,19 +357,19 @@ class Vira:
             }
         )
 
-        def add_plugin(self, plugin_cls: Type[ViraPlugin], **kwargs):
-            """
-            Registra e inicializa un plugin en la aplicación Vira.
+    def add_plugin(self, plugin_cls: Type[ViraPlugin], **kwargs):
+        """
+        Registra e inicializa un plugin en la aplicación Vira.
 
-            Args:
-                plugin_cls: La clase del plugin (no la instancia).
-                **kwargs: Argumentos para el inicializador del plugin.
-            """
-            if self._middleware_built:
-                raise RuntimeError(
-                    "No se pueden añadir plugins después del inicio de la aplicación."
-                )
+        Args:
+            plugin_cls: La clase del plugin (no la instancia).
+            **kwargs: Argumentos para el inicializador del plugin.
+        """
+        if self._middleware_built:
+            raise RuntimeError(
+                "No se pueden añadir plugins después del inicio de la aplicación."
+            )
 
-            plugin_instance = plugin_cls(self, **kwargs)
-            plugin_instance.register()
-            self.plugins.append(plugin_instance)
+        plugin_instance = plugin_cls(self, **kwargs)
+        plugin_instance.register()
+        self.plugins.append(plugin_instance)

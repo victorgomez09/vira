@@ -17,12 +17,22 @@ import os
 # Add parent directory to path to import vira
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
+from plugins.openapi import OpenAPIPlugin
 from vira import Vira, Request, APIRouter
 from vira.response import text_response, json_response
 from vira.middleware.builtin_middleware import CORSMiddleware, ExceptionMiddleware
 
 # Create the main application
 app = Vira()
+
+# ============================================================================
+# REGISTER OPENAPI PLUGIN
+# ============================================================================
+app.add_plugin(
+    OpenAPIPlugin, 
+    title="Mi Increíble API con Vira", 
+    version="1.0.0"
+)
 
 # ============================================================================
 # 1. BASIC MIDDLEWARE SETUP

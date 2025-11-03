@@ -266,7 +266,7 @@ class Vira:
             await self._handle_unsupported_protocol(send)
 
     async def _handle_lifespan(
-        self, scope: Dict[str, Any], receive: Callable, send: Callable
+        self, _: Dict[str, Any], receive: Callable, send: Callable
     ):
         """
         Handle ASGI lifespan protocol for startup and shutdown events.
@@ -359,15 +359,15 @@ class Vira:
 
     def add_plugin(self, plugin_cls: Type[ViraPlugin], **kwargs):
         """
-        Registra e inicializa un plugin en la aplicación Vira.
+        Registers and initializes a plugin in the Vira application.
 
         Args:
-            plugin_cls: La clase del plugin (no la instancia).
-            **kwargs: Argumentos para el inicializador del plugin.
+            plugin_cls: The plugin class (not the instance).
+            **kwargs: Arguments for the plugin initializer.
         """
         if self._middleware_built:
             raise RuntimeError(
-                "No se pueden añadir plugins después del inicio de la aplicación."
+                "Plugins cannot be added after the application has started."
             )
 
         plugin_instance = plugin_cls(self, **kwargs)

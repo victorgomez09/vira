@@ -30,8 +30,9 @@ app = Vira()
 # ============================================================================
 app.add_plugin(
     OpenAPIPlugin, 
-    title="Mi Increíble API con Vira", 
-    version="1.0.0"
+    title="Complete Vira example API",
+    description="This is a complete example API demonstrating Vira features.",
+    version="1.0.0",
 )
 
 # ============================================================================

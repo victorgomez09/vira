@@ -1,35 +1,36 @@
-# vira_openapi/plugin.py (Requiere el código del generador de la sección anterior: OpenAPIDocs)
-import inspect
-from typing import TYPE_CHECKING, Any, Callable, Dict
-from urllib.parse import unquote
+import re
+import json
+from typing import Any, Callable, Dict
 
-# Asumiremos que ViraPlugin y OpenAPIDocs son accesibles.
 from vira.plugin import ViraPlugin
-from vira.response import json_response, Response # Necesitas estas respuestas
+from vira.response import Response
+from vira.vira import Vira
+
+
 class OpenAPIDocs:
     """
-    Clase para generar el esquema OpenAPI a partir de las rutas de Vira.
+    Class to generate OpenAPI schema from Vira routes
     """
-    def __init__(self, app: 'Vira', title: str = "API de Vira", version: str = "0.1.0"):
+    def __init__(self, app: "Vira", title: str = "Vira API", description: str = "", version: str = "0.1.0"):
         self.app = app
         self.title = title
+        self.description = description
         self.version = version
         self._schema: Dict[str, Any] = {}
 
     def generate_schema(self) -> Dict[str, Any]:
-        """Genera y retorna el esquema OpenAPI completo (JSON/Dict)."""
+        """Generates and return OpenAPI full scheme (JSON/Dict)."""
         
-        # Genera el diccionario base del esquema OpenAPI
         self._schema = {
             "openapi": "3.0.0",
             "info": {
                 "title": self.title,
                 "version": self.version,
-                "description": self.app.__doc__.strip() if self.app.__doc__ else "Una aplicación ASGI simple.",
+                "description": self.description or f"{self.title} API documentation.",
             },
             "paths": self._generate_paths(),
             "components": {
-                # Aquí se añadirían los modelos Pydantic si se usaran
+                # TODO: Implement model extraction from Pydantic
                 "schemas": {} 
             },
         }
@@ -37,37 +38,40 @@ class OpenAPIDocs:
 
     def _generate_paths(self) -> Dict[str, Any]:
         """
-        Itera sobre el APIRouter y genera el objeto 'paths'.
-        NOTA: Necesitas adaptar esta parte a la estructura interna real de tu APIRouter.
-        Asumimos que APIRouter.routes_data es el mapa de rutas.
+        Iterate over the list of routes in APIRouter and generate the 'paths' object
+        in the dictionary format required by OpenAPI.
         """
         paths = {}
+        EXCLUDED_PATHS = {"/docs", "/openapi.json"}
         
-        # Iterar sobre las rutas registradas en el APIRouter principal de la aplicación.
-        # **ESTE CÓDIGO DEPENDE DE CÓMO ALMACENA INTERNAMENTE LAS RUTAS TU `APIRouter`**
-        # Si tienes la lista de rutas en `self.app.api_router.routes_data`:
-        if hasattr(self.app.api_router, 'routes_data'):
-            for path_pattern, route_mapping in self.app.api_router.routes_data.items():
-                path_item = {}
-                
-                # Descodifica la URL si usa codificación (aunque en Vira no suele ser necesario)
-                openapi_path = unquote(path_pattern) 
-                
-                for method, handler in route_mapping.items():
-                    # Solo incluimos métodos HTTP comunes
-                    if method in {"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"}:
-                        operation = self._generate_operation(method, openapi_path, handler)
-                        path_item[method.lower()] = operation
-                
-                if path_item:
-                    paths[openapi_path] = path_item
+        routes_list = getattr(self.app.api_router, 'routes', None)
+
+        if not isinstance(routes_list, list):
+            print("WARNING: 'routes' list not found in self.app.api_router or it is not a list. Route documentation will not be generated.")
+            return {}
+
+        for route in routes_list:
+            path_pattern = route.path
+            handler = route.handler
+            
+            if path_pattern in EXCLUDED_PATHS:
+                continue
+
+            openapi_path = re.sub(r'\{([a-zA-Z0-9_]+):[a-zA-Z]+\}', r'{\1}', path_pattern)
+
+            if openapi_path not in paths:
+                paths[openapi_path] = {}
+
+            for method in route.methods:
+                if method in {"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"}:
+                    operation = self._generate_operation(method, openapi_path, handler, path_pattern)
+                    paths[openapi_path][method.lower()] = operation
         
         return paths
 
-    def _generate_operation(self, method: str, path: str, handler: Callable) -> Dict[str, Any]:
-        """Genera el objeto 'operation' (GET, POST, etc.) para una ruta específica."""
+    def _generate_operation(self, method: str, path: str, handler: Callable, original_path: str) -> Dict[str, Any]:
+        """Generate the 'operation' object (GET, POST, etc.) for a specific path."""
         
-        # Usa la docstring como descripción (solo la primera línea como resumen)
         docstring = handler.__doc__.strip() if handler.__doc__ else ""
         summary = docstring.split('\n')[0]
         description = docstring
@@ -75,112 +79,124 @@ class OpenAPIDocs:
         operation: Dict[str, Any] = {
             "summary": summary or f"{method} {path}",
             "description": description,
-            "tags": ["default"], # Se podrían añadir etiquetas personalizadas
+            "tags": ["API"],
             "parameters": [],
             "responses": {
-                "200": {"description": "Respuesta exitosa"},
-                "404": {"description": "No encontrado"},
+                "200": {"description": "Successful response"},
             },
         }
 
-        # Inspeccionar la firma del manejador para ver parámetros de ruta
-        try:
-            sig = inspect.signature(handler)
-            for name, param in sig.parameters.items():
-                if name != "request": # Excluye el objeto Request
-                    # En Vira, los parámetros de ruta se inyectan por nombre
-                    # Aquí solo podemos asumir el tipo básico si no usamos Pydantic
-                    
-                    # Simulación de extracción de parámetros de ruta
-                    # TODO: Mejorar la inferencia de tipos y si es 'path' o 'query'
-                    
-                    # Un enfoque simple: si el parámetro está en la ruta, es un path parameter
-                    if f"{{{name}}}" in path or f"{{{name}:" in path:
-                         operation["parameters"].append({
-                            "name": name,
-                            "in": "path",
-                            "required": True,
-                            "schema": {"type": "string"}, # Se podría mejorar la inferencia
-                        })
+        param_regex = re.compile(r'\{([a-zA-Z0-9_]+):([a-zA-Z]+)\}')
+        matches = param_regex.findall(original_path)
+        
+        TYPE_MAP = {
+            "str": "string",
+            "int": "integer",
+            "float": "number",
+        }
 
-        except ValueError:
-            # Puede fallar si el handler no es una función simple
-            pass
+        for name, type_str in matches:
+            openapi_type = TYPE_MAP.get(type_str.lower(), "string")
 
+            operation["parameters"].append({
+                "name": name,
+                "in": "path",
+                "required": True,
+                "schema": {"type": openapi_type},
+                "description": f"Path parameter of type: {type_str}"
+            })
+            
+        # ----------------------------------------------------------------
+        # TODO: Logic to infer QUERY parameters and Request Body (Pydantic models)
+        # ----------------------------------------------------------------
+        
         return operation
 
 
 class OpenAPIPlugin(ViraPlugin):
-    """Plugin para añadir documentación OpenAPI y Swagger UI."""
+    """Plugin to add OpenAPI and Swagger UI documentation."""
 
-    def __init__(self, app: 'Vira', title: str = "API de Vira", version: str = "0.1.0"):
+    def __init__(self, app: 'Vira', title: str = "Vira API", description: str = "", version: str = "0.1.0"):
         super().__init__(app)
         self.title = title
+        self.description = description
         self.version = version
-        self.docs_generator = OpenAPIDocs(app, title=title, version=version)
+        self.docs_generator = OpenAPIDocs(app, title=title, description=description, version=version)
+        self.openapi_schema: dict = {}
+        self.swagger_html: str = ""
     
     def register(self):
         """
-        Registra el generador de esquema y las rutas de documentación
-        en el evento de inicio de Vira.
+        Register the schema generator and documentation routes.
         """
-        # Añadir el handler de inicio al Vira principal
-        self.app.add_event_handler("startup", self._generate_and_register_routes)
-        print(f"INFO: Plugin OpenAPI '{self.title}' registrado. Se iniciará en 'startup'.")
-
-    async def _generate_and_register_routes(self):
-        """Genera el esquema OpenAPI y registra las rutas /openapi.json y /docs."""
+        self.app.add_event_handler("startup", self._generate_static_content)
         
-        # 1. Generar el esquema UNA VEZ
-        openapi_schema = self.docs_generator.generate_schema()
+        self.app.get("/openapi.json", priority=9999)(self.openapi_json_endpoint)
+        self.app.get("/docs", priority=9999)(self.swagger_ui_endpoint)
         
-        # 2. Generar el contenido HTML UNA VEZ
-        swagger_html = self._get_swagger_html()
+        print(f"INFO: Plugin OpenAPI '{self.title}' registered. Paths added.")
 
-        # 3. Registrar la ruta del JSON de OpenAPI
-        # Usamos app.get() para registrar una función lambda que ignora el 'request'
-        # y devuelve el esquema JSON generado.
-        self.app.get("/openapi.json", priority=9999)(
-            lambda request: json_response(openapi_schema)
+    async def _generate_static_content(self):
+        """Startup handler: generates the static content for docs."""
+        self.openapi_schema = self.docs_generator.generate_schema()
+        self.swagger_html = self._get_swagger_html()
+        print("INFO: Static content for OpenAPI generated successfully.")
+
+    async def openapi_json_endpoint(self, *_) -> Response:
+        """Serves the generated OpenAPI schema."""
+
+        headers = {
+            "Content-Type": "application/json"
+        }
+        return Response(
+            content=json.dumps(self.openapi_schema).encode("utf-8"),
+            status_code=200,
+            headers=headers
         )
 
-        # 4. Registrar la ruta de Swagger UI
-        # Usamos app.get() para registrar una función lambda que ignora el 'request'
-        # y devuelve el HTML generado.
-        self.app.get("/docs", priority=9999)(
-            lambda request: Response(
-                content=swagger_html.encode("utf-8"),
-                media_type="text/html",
-                status_code=200
-            )
+    async def swagger_ui_endpoint(self, *_) -> Response:
+        """Serves the Swagger UI."""
+        
+        headers = {
+            "Content-Type": "text/html; charset=utf-8"
+        }
+        
+        return Response(
+            content=self.swagger_html.encode("utf-8"), 
+            status_code=200,
+            headers=headers
         )
         
-        print("INFO: Rutas de documentación OpenAPI registradas en /openapi.json y /docs")
-
     def _get_swagger_html(self) -> str:
-        """Helper para generar el contenido HTML de Swagger UI."""
-        # Mueve aquí el código HTML de Swagger UI para mayor limpieza.
+        """Helper to generate the HTML content for Swagger UI."""
+
         return f"""
         <!DOCTYPE html>
-        <html>
+        <html lang="en">
         <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta name="description" content="SwaggerUI" />
             <title>{self.title} Docs</title>
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.17.14/swagger-ui.css">
+            <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css" />
         </head>
         <body>
-            <div id="swagger-ui"></div>
-            <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.17.14/swagger-ui-bundle.js"></script>
-            <script>
-            SwaggerUIBundle({{
-                url: "/openapi.json",
-                dom_id: '#swagger-ui',
-                presets: [
-                    SwaggerUIBundle.presets.apis,
-                    SwaggerUIBundle.SwaggerUIStandalonePreset
-                ],
-                layout: "BaseLayout",
-            }})
-            </script>
+        <div id="swagger-ui"></div>
+        <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js" crossorigin></script>
+        <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-standalone-preset.js" crossorigin></script>
+        <script>
+            window.onload = () => {{
+                window.ui = SwaggerUIBundle({{
+                    url: '/openapi.json',
+                    dom_id: '#swagger-ui',
+                    presets: [
+                        SwaggerUIBundle.presets.apis,
+                        SwaggerUIStandalonePreset
+                    ],
+                    layout: "StandaloneLayout",
+                }});
+            }};
+        </script>
         </body>
         </html>
         """

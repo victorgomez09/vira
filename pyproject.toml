@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vira"
+version = "0.3.0"
+authors = [
+    {name = "Víctor Gómez", email = "mdsuanzes@gmail.com"}
+]
+description = "A light and fast ASGI web framework"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Internet :: WWW/HTTP :: ASGI :: Server",
+]
+keywords = ["asgi", "web", "framework", "http", "api"]
+dependencies = [
+    # No runtime dependencies for the basic version
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "uvicorn>=0.20.0",
+]
+
+validation = [
+    "pydantic>=2.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/victorgomez09/vira"
+Repository = "https://github.com/victorgomez09/vira.git"
+Issues = "https://github.com/victorgomez09/vira/issues"
+Documentation = "https://github.com/victorgomez09/vira/blob/main/README.md"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["vira*"]
+exclude = ["tests*", "examples*"]

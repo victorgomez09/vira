@@ -19,11 +19,13 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 from plugins.openapi import OpenAPIPlugin
 from vira import Vira, Request, APIRouter
+from vira.logger import Logger
 from vira.response import text_response, json_response
 from vira.middleware.builtin_middleware import CORSMiddleware, ExceptionMiddleware
 
 # Create the main application
 app = Vira()
+logger = Logger(name="complete_example", json_logs=False)
 
 # ============================================================================
 # REGISTER OPENAPI PLUGIN
@@ -51,9 +53,9 @@ app.add_middleware(
 
 # Custom logging middleware
 async def logging_middleware(request: Request, call_next):
-    print(f"🔍 {request.method} {request.path}")
+    logger.info(f"🔍 {request.method} {request.path}")
     response = await call_next(request)
-    print(f"✅ Response: {response.status_code}")
+    logger.info(f"✅ Response: {response.status_code}")
     return response
 
 
@@ -68,7 +70,7 @@ api_router = APIRouter()
 
 
 @app.get("/")
-async def home(request: Request):
+async def home():
     """Welcome page."""
     return text_response(
         """
@@ -100,7 +102,7 @@ async def get_user(request: Request, user_id: int):
 
 
 @app.get("/users/{username:str}")
-async def get_user_by_name(request: Request, username: str):
+async def get_user_by_name(username: str):
     """Get user by username - demonstrates string path parameters."""
     return json_response(
         {
@@ -224,7 +226,7 @@ async def upload_file(request: Request):
 
 
 @app.get("/cookies/set")
-async def set_cookies(request: Request):
+async def set_cookies():
     """Set cookies - demonstrates cookie handling."""
     response = json_response({"message": "Cookies set successfully"})
 
@@ -256,7 +258,7 @@ async def get_cookies(request: Request):
 
 
 @api_router.get("/health")
-async def health_check(request: Request):
+async def health_check():
     """API health check."""
     return json_response(
         {"status": "healthy", "version": "1.0.0", "timestamp": "2025-09-17T12:00:00Z"}
@@ -264,7 +266,7 @@ async def health_check(request: Request):
 
 
 @api_router.get("/info")
-async def api_info(request: Request):
+async def api_info():
     """API information."""
     return json_response(
         {
@@ -286,5 +288,5 @@ if __name__ == "__main__":
     import uvicorn
 
     print("🚀 Starting Vira Complete Example")
-    print("📍 Visit: http://localhost:8000")
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    print("📍 Visit: http://localhost:1209")
+    uvicorn.run(app, host="127.0.0.1", port=1209, log_config=None)

@@ -49,7 +49,6 @@ app.add_middleware(
     )
 )
 
-
 # Custom logging middleware
 async def logging_middleware(request: Request, call_next):
     print(f"🔍 {request.method} {request.path}")

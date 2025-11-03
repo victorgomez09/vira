@@ -7,7 +7,7 @@ Represents an individual route with path, method, and handler.
 import re
 import uuid
 import inspect
-from typing import Callable, Awaitable, Optional, Set, Dict, Any, Union
+from typing import Callable, Awaitable, Optional, Set, Dict, Any, Union, get_args, get_origin
 from ..request import Request
 from ..response import Response
 
@@ -21,42 +21,42 @@ class Route:
 
     Attributes:
         path (str): Normalized URL path pattern. Trailing slashes are removed except
-                   for root ("/"). Examples: "/users", "/users/{id:int}", "/files/{filepath:multipath}"
+                    for root ("/"). Examples: "/users", "/users/{id:int}", "/files/{filepath:multipath}"
 
         handler (Callable): Async function that handles requests matching this route.
-                           Can accept path parameters and Request-annotated parameters.
+                            Can accept path parameters and Request-annotated parameters.
 
         methods (Set[str]): Set of HTTP methods this route accepts (e.g., {"GET", "POST"}).
-                           Defaults to {"GET"} if not specified.
+                            Defaults to {"GET"} if not specified.
 
         priority (int): Route matching priority. Higher values are checked first.
-                       Useful for ensuring specific routes match before generic ones.
+                        Useful for ensuring specific routes match before generic ones.
 
         route_regex (re.Pattern): Compiled regex pattern for matching incoming request paths.
                                  Generated from the path pattern during initialization.
 
         param_types (Dict[str, Any]): Maps path parameter names to their expected types.
-                                     Types can be: str, int, float, uuid.UUID, or "multipath".
-                                     Maintains insertion order (Python 3.7+).
+                                      Types can be: str, int, float, uuid.UUID, or "multipath".
+                                      Maintains insertion order (Python 3.7+).
 
         segment_count (int): Number of path segments in the route pattern.
-                           Used for quick filtering before expensive regex matching.
+                             Used for quick filtering before expensive regex matching.
 
         has_multipath_parameter (bool): True if route contains a multipath parameter ({name:multipath}).
-                                       Multipath parameters can match multiple segments.
+                                        Multipath parameters can match multiple segments.
 
         handler_params (list[str]): List of all parameter names in the handler function signature.
-                                   Includes both path parameters and any typed parameters.
+                                    Includes both path parameters and any typed parameters.
 
         request_params (list[str]): List of parameter names that expect Request type injection.
-                                   Only includes parameters with explicit Request type annotations.
+                                    Only includes parameters with explicit Request type annotations.
 
         handler_path_params (set[str]): Set of path parameter names from handler signature.
-                                       Excludes typed injection parameters.
+                                        Excludes typed injection parameters.
 
         expected_path_params (list[str]): List of path parameters that exist in both
-                                         the route pattern and handler signature.
-                                         Used for automatic parameter injection.
+                                          the route pattern and handler signature.
+                                          Used for automatic parameter injection.
 
     Example:
         >>> async def get_user(user_id: int, request: Request) -> Response:
@@ -301,12 +301,12 @@ class Route:
 
         Raises:
             ValueError: If parameter specification is malformed (unclosed braces,
-                       invalid type specifications, etc.)
+                        invalid type specifications, etc.)
 
         Example:
             For pattern "/users/{user_id:int}/posts", when index points to '{':
             - Extracts "user_id:int"
-            - Adds r"(\\d+)" to regex_parts
+            - Adds r"(\d+)" to regex_parts
             - Adds {"user_id": int} to param_types
             - Returns index pointing after '}'
         """
@@ -498,27 +498,126 @@ class Route:
 
         return True, path_params
 
+    # --- Methods for Parameter Binding (Query Params) ---
+    def _is_optional_type(self, annotation: Any) -> bool:
+        """
+        Check if a type annotation is Optional[T] or Union[T, None].
+        """
+        return get_origin(annotation) is Union and type(None) in get_args(annotation)
+
+    def _unwrap_type(self, annotation: Any) -> type:
+        """
+        Get the non-Union type from an annotation.
+
+        If it's Optional[T] or Union[T, None], it returns T.
+        If it's a simple type (str, int), it returns the type itself.
+        """
+        if get_origin(annotation) is Union:
+            # Union types: remove NoneType and return the remaining type.
+            non_none_args = [arg for arg in get_args(annotation) if arg is not type(None)]
+            if len(non_none_args) == 1:
+                return non_none_args[0]
+            # If multiple types remain, or none (shouldn't happen with Optional),
+            # default to str to avoid complexity, or handle error.
+            return str # Fallback for complex unions not designed for query params
+
+        return annotation
+
+    def _convert_value(self, value: str, target_type: type) -> Any:
+        """
+        Convert a string value from query params to the target type.
+        """
+        if target_type is str:
+            return value
+        if target_type is int:
+            return int(value)
+        if target_type is float:
+            return float(value)
+        if target_type is uuid.UUID:
+            return uuid.UUID(value)
+        
+        # Handle Boolean type (case-insensitive conversion)
+        if target_type is bool:
+            if value.lower() in ('true', '1', 't'):
+                return True
+            if value.lower() in ('false', '0', 'f'):
+                return False
+            raise ValueError(f"Cannot convert '{value}' to boolean.")
+            
+        raise TypeError(f"Unsupported target type for conversion: {target_type}")
+
+    # --- Handle method with Query Parameter Binding ---
     async def handle(self, request: Request) -> Response:
         """
         Handle the request using this route's handler with automatic parameter injection.
+
+        Injects:
+        1. Request object (if annotated)
+        2. Path parameters (from route match)
+        3. Query parameters (from request.query_params)
 
         Args:
             request: The HTTP request (with path_params populated)
 
         Returns:
             Response from the handler
+        
+        Raises:
+            ValueError: If a required query parameter is missing and has no default value.
+            TypeError: If query parameter conversion fails.
         """
-        # Build arguments for the handler function
+        sig = inspect.signature(self.handler)
         kwargs = {}
 
-        # Inject Request objects for parameters annotated with Request type
-        for param_name in self.request_params:
-            kwargs[param_name] = request
-
-        # Add path parameters that the handler expects
-        for param_name in self.expected_path_params:
-            if param_name in request.path_params:
+        # 1. Inject Request objects and Path parameters (existing logic)
+        path_param_names = set(request.path_params.keys())
+        
+        for param_name, param in sig.parameters.items():
+            if param.annotation == Request:
+                # Inject the Request object
+                kwargs[param_name] = request
+            elif param_name in path_param_names:
+                # Inject the Path parameter (already type-converted by _extract_path_parameters)
                 kwargs[param_name] = request.path_params[param_name]
+            # Parameters not handled here are assumed to be Query or Body parameters
+        
+        # 2. Inject Query Parameters (New Logic)
+        for param_name, param in sig.parameters.items():
+            
+            # Skip parameters already injected (Request object, Path parameters)
+            if param_name in kwargs:
+                continue
+
+            # Determine if the parameter has an explicit type annotation
+            if param.annotation == inspect.Parameter.empty:
+                # If no annotation, skip (cannot bind without type info, 
+                # or rely on default value which will be used by Python later)
+                continue
+
+            # Check if parameter is present in Query Params
+            raw_value = request.query_params.get(param_name)
+            
+            is_optional = self._is_optional_type(param.annotation)
+            
+            if raw_value is not None:
+                # Value found in query params, attempt conversion
+                try:
+                    target_type = self._unwrap_type(param.annotation)
+                    kwargs[param_name] = self._convert_value(raw_value, target_type)
+                except (ValueError, TypeError) as e:
+                    # Conversion failed (e.g., 'abc' for int) -> Bad Request error (would be caught higher up)
+                    print(f"ERROR: Query param '{param_name}' conversion failed: {e}")
+                    raise TypeError(f"Invalid type for query parameter '{param_name}'.") from e
+            else:
+                # Value NOT found in query params
+                
+                # If optional (Union[T, None]) or has a default value (e.g., q=None, q='default')
+                if is_optional or param.default is not inspect.Parameter.empty:
+                    # Rely on Python to use the default value (which might be None)
+                    pass # Do not add to kwargs, let Python fill it
+                else:
+                    # Parameter is required, but missing
+                    raise ValueError(f"Required query parameter '{param_name}' is missing.")
 
         return await self.handler(**kwargs)
 

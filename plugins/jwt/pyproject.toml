@@ -12,6 +12,5 @@ requires-python = ">=3.9"
 
 dependencies = ["vira", "jwt"]
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["*"]
+[tool.setuptools]
+py-modules = ["jwt", "base", "decorators"]

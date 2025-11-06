@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from plugins.openapi import OpenAPIPlugin
+from plugins.openapi.openapi import OpenAPIPlugin
 from vira.vira import Vira
 from vira.response import json_response
 

@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vira_middleware_https_redirect"
+version = "0.1.0"
+description = "HTTPS Redirect Middleware implementation for Vira."
+authors = [{ name = "Víctor Gómez", email = "mdsuanzes@gmail.com" }]
+license = "MIT"
+requires-python = ">=3.9"
+
+dependencies = ["vira"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["*"]

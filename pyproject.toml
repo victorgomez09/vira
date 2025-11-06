@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vira"
-version = "0.3.0"
+version = "0.1.0"
 authors = [
     {name = "Víctor Gómez", email = "mdsuanzes@gmail.com"}
 ]
@@ -21,13 +21,18 @@ classifiers = [
 ]
 keywords = ["asgi", "web", "framework", "http", "api"]
 dependencies = [
-    # No runtime dependencies for the basic version
+    # Dependencias de runtime para el framework core. (Vacío si solo usas built-ins).
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0.0",
     "pytest-asyncio>=0.21.0",
+]
+
+# Uvicorn y Argparse se dejan aquí como una dependencia opcional
+# ya que son necesarios para la futura CLI, pero no para el core.
+cli = [ 
     "uvicorn>=0.20.0",
 ]
 
@@ -41,7 +46,14 @@ Repository = "https://github.com/victorgomez09/vira.git"
 Issues = "https://github.com/victorgomez09/vira/issues"
 Documentation = "https://github.com/victorgomez09/vira/blob/main/README.md"
 
+# -------------------------------------------------------------
+# NOTA CLAVE: La sección [project.scripts] está ELIMINADA.
+# Esto asegura que no se cree el comando 'vira' en este paquete.
+# -------------------------------------------------------------
+
 [tool.setuptools.packages.find]
+# REGLA CLAVE: Solo incluir el paquete 'vira'.
 where = ["."]
-include = ["vira*"]
-exclude = ["tests*", "examples*"]
+include = ["vira"] 
+# EXCLUIR todos los demás directorios.
+exclude = ["tests*", "examples*", "cli*", "middlewares*", "plugins*", "*.py"]

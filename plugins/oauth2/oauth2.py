@@ -1,8 +1,8 @@
 from vira.plugin import ViraPlugin 
-from vira.response import Response, redirect_response, text_response # Asume importación del core
+from vira.response import Response, redirect_response, text_response
 from http.client import HTTPException
 from functools import wraps
-from typing import TYPE_CHECKING, Any, Callable, Awaitable, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Callable, Awaitable
 import json
 
 from .client_security import (

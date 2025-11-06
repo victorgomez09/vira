@@ -48,7 +48,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # The 'site' directory is the default output of mkdocs build
-          path: './site' 
+          path: 'docs/site' 
 
   deploy:
     environment:

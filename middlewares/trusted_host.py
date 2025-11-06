@@ -4,8 +4,8 @@ Compatible with FastAPI's TrustedHostMiddleware interface.
 """
 
 from typing import List, Optional, Callable, Awaitable
-from ...response import Response
-from ...request import Request
+from vira.response import Response
+from vira.request import Request
 
 
 class TrustedHostMiddleware:

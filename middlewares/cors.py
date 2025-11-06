@@ -4,9 +4,10 @@ Compatible with FastAPI's CORSMiddleware interface.
 """
 
 from typing import Optional, Sequence, Callable, Awaitable
-from ...response import Response
-from ...request import Request
 import re
+
+from vira.request.request import Request
+from vira.response import Response
 
 ALL_METHODS = ("DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT")
 

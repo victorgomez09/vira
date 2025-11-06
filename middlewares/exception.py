@@ -14,11 +14,11 @@ from __future__ import annotations
 
 import traceback
 from typing import Callable, Awaitable, Literal, TYPE_CHECKING
-from ...response import json_response, Response
-from ...status import HTTPStatus
+from vira.response import json_response, Response
+from vira.status import HTTPStatus
 
 if TYPE_CHECKING:  # pragma: no cover - only for type hints
-    from ...request import Request
+    from vira.request import Request
 
 
 class ExceptionMiddleware:

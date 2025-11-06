@@ -5,8 +5,8 @@ Compatible with FastAPI's GZipMiddleware interface.
 
 import gzip
 from typing import Callable, Awaitable
-from ...request import Request
-from ...response import Response
+from vira.request import Request
+from vira.response import Response
 
 
 class GZipMiddleware:

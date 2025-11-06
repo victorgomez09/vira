@@ -1,5 +1,5 @@
 import time
-from typing import Callable, Awaitable, Dict, Any, Tuple
+from typing import Callable, Awaitable, Dict, Any
 from vira.request import Request
 from vira.response import Response
 

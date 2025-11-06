@@ -3,9 +3,9 @@ HTTPS Redirect middleware for Vira.
 Compatible with FastAPI's HTTPSRedirectMiddleware interface.
 """
 
-from ..middleware_chain import MiddlewareCallable
-from ...response import redirect_response
-from ...request import Request
+from vira.middleware.middleware_chain import MiddlewareCallable
+from vira.response import redirect_response
+from vira.request import Request
 
 
 class HTTPSRedirectMiddleware:

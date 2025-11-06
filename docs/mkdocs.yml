@@ -1,0 +1,66 @@
+site_name: Vira Framework Documentation
+site_author: Victor Gomez
+site_url: https://github.com/victorgomez09/vira # Or your deployment URL
+repo_url: https://github.com/victorgomez09/vira.git
+repo_name: vira
+edit_uri: edit/main/docs # Allows editing pages directly on GitHub
+
+# Material Theme Configuration
+theme:
+  name: material
+  language: en
+  palette:
+    scheme: slate # Dark theme
+    primary: deep blue # Primary color (you can change this)
+    accent: deep blue # Accent color
+  icon:
+    logo: material/book-open-page-variant # Navbar icon
+  features:
+    - navigation.tabs # Tab navigation
+    - search.suggest # Search suggestions
+    - search.highlight # Highlight search results
+
+# Markdown Extensions for more features
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - admonition # Blocks for notes, warnings, etc.
+  - codehilite # Syntax highlighting
+  - toc:
+      permalink: true # Permanent links to headings
+
+# Navigation Structure (Defines the order of pages in the menu)
+nav:
+  - Home: index.md
+  - Framework Components:  # Main group heading
+    - Core Application:
+      - Vira App: vira_framework/vira.md
+      - Application State: vira_framework/state.md
+      - Logging: vira_framework/logger.md
+    - Routing:
+      - API Router: vira_framework/api_router.md
+      - Single Route: vira_framework/route.md
+    - Request/Response:
+      - Request Object: vira_framework/request.md
+      - Response Object: vira_framework/response.md
+      - HTTP Status Codes: vira_framework/status.md
+    - Extension & Pipeline:
+      - Middleware Chain: vira_framework/middleware_chain.md
+      - Plugins: vira_framework/plugin.md
+    - File Uploads:
+      - Multipart Parser: vira_framework/parser.md
+      - Upload File: vira_framework/upload_file.md
+  - Middlewares:
+    - CORS Handling: middlewares/cors.md
+    - Content Security Policy: middlewares/csp.md
+    - Exceptions: middlewares/exceptions.md
+    - GZIP Compression: middlewares/g_zip.md
+    - HTTP Headers: middlewares/http_headers.md
+    - HTTPS Redirect: middlewares/https_redirect.md
+    - Rate Limiting: middlewares/rate_limit.md
+    - Trusted Hosts: middlewares/trusted_hosts.md
+  - Contributing: contributing.md

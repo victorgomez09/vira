@@ -5,14 +5,13 @@ on:
     # Trigger the workflow only on pushes to the main branch
     branches:
       - main
-    # Only run if files in the docs/ directory or MkDocs config change
+    # Only run if files in the docs/ directory or the mkdocs.yml file change
     paths:
       - 'docs/**'
-      - 'mkdocs.yml'
   # Allows manual running from the Actions tab
   workflow_dispatch:
 
-# Grant permissions to allow the action to create the deployment
+# Grant necessary permissions
 permissions:
   contents: read
   pages: write
@@ -24,7 +23,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  # Job to build the static documentation website using MkDocs
   build:
     runs-on: ubuntu-latest
     steps:
@@ -38,12 +36,13 @@ jobs:
 
       - name: 📦 Install Dependencies
         run: |
-          # Install MkDocs and any theme/plugin you use (e.g., mkdocs-material)
+          # Install MkDocs and a theme (e.g., mkdocs-material)
           pip install mkdocs mkdocs-material
 
-      - name: 🏗️ Build MkDocs Site
-        # This command runs MkDocs and outputs static HTML/CSS to the 'site' directory
-        run: mkdocs build
+      - name: 🏗️ Build MkDocs Site (Adjusted Command)
+        # 🚨 CHANGE: Use '-f docs/mkdocs.yml' to specify the config location
+        # MkDocs will correctly output the static files to the 'site' folder in the root.
+        run: mkdocs build -f docs/mkdocs.yml
 
       - name: ⬆️ Upload Artifact for Deployment
         uses: actions/upload-pages-artifact@v3
@@ -51,7 +50,6 @@ jobs:
           # The 'site' directory is the default output of mkdocs build
           path: './site' 
 
-  # Job to deploy the static files
   deploy:
     environment:
       name: github-pages

@@ -28,6 +28,9 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
   - admonition # Blocks for notes, warnings, etc.
   - codehilite # Syntax highlighting
   - toc:

@@ -32,10 +32,13 @@ markdown_extensions:
   - codehilite # Syntax highlighting
   - toc:
       permalink: true # Permanent links to headings
+  - pymdownx.tasklist:
+      custom_checkbox: true
 
 # Navigation Structure (Defines the order of pages in the menu)
 nav:
   - Home: index.md
+  - Getting Started: usage/getting-started.md
   - Framework Components:  # Main group heading
     - Core Application:
       - Vira App: vira_framework/vira.md
@@ -63,4 +66,8 @@ nav:
     - HTTPS Redirect: middlewares/https_redirect.md
     - Rate Limiting: middlewares/rate_limit.md
     - Trusted Hosts: middlewares/trusted_hosts.md
-  - Contributing: contributing.md
+  - Plugins:
+    - JWT: plugins/jwt.md
+    - Oauth2: plugins/oauth2.md
+    - OpenAPI: plugins/openapi.md
+  - Roadmap: roadmap/index.md

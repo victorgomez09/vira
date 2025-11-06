@@ -42,14 +42,3 @@ async def aset_example(request: Request):
         val = await request.state.aget("async_key")
         return text_response(f"async_key={val}")
     return text_response("async methods not available on State")
-
-# ============================================================================
-# APPLICATION ENTRY POINT
-# ============================================================================
-
-if __name__ == "__main__":
-    import uvicorn
-
-    print("🚀 Starting Vira Complete Example")
-    print("📍 Visit: http://localhost:8000")
-    uvicorn.run(app, host="127.0.0.1", port=8000)

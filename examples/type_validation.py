@@ -61,14 +61,3 @@ async def get_user(user_id: int, q: Union[str, None] = None):
         },
         status_code=200
     )
-
-# ============================================================================
-# APPLICATION ENTRY POINT
-# ============================================================================
-
-if __name__ == "__main__":
-    import uvicorn
-
-    print("🚀 Starting Vira Complete Example")
-    print("📍 Visit: http://localhost:8000")
-    uvicorn.run(app, host="127.0.0.1", port=8000)

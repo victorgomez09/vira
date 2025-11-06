@@ -21,7 +21,7 @@ from plugins.openapi import OpenAPIPlugin
 from vira import Vira, Request, APIRouter
 from vira.logger import Logger
 from vira.response import text_response, json_response
-from vira.middleware.builtin_middleware import CORSMiddleware, ExceptionMiddleware
+from middlewares import CORSMiddleware, ExceptionMiddleware
 
 # Create the main application
 app = Vira()
@@ -279,14 +279,3 @@ async def api_info():
 
 # Include the API router with prefix
 app.include_router(api_router, prefix="/api")
-
-# ============================================================================
-# APPLICATION ENTRY POINT
-# ============================================================================
-
-if __name__ == "__main__":
-    import uvicorn
-
-    print("🚀 Starting Vira Complete Example")
-    print("📍 Visit: http://localhost:1209")
-    uvicorn.run(app, host="127.0.0.1", port=1209, log_config=None)

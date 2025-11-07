@@ -17,11 +17,12 @@ import os
 # Add parent directory to path to import vira
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from plugins.openapi.openapi import OpenAPIPlugin
+from vira_plugins.openapi import OpenAPIPlugin
 from vira import Vira, Request, APIRouter
 from vira.logger import Logger
 from vira.response import text_response, json_response
-from middlewares import CORSMiddleware, ExceptionMiddleware
+from vira_middlewares.cors import CORSMiddleware
+from vira_middlewares.exception import ExceptionMiddleware
 
 # Create the main application
 app = Vira()

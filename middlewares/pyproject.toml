@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "vira_middleware_http_headers"
+name = "vira_middlewares"
 version = "0.1.0"
-description = "HTTP Headers Middleware implementation for Vira."
+description = "Middlewares implementation for Vira."
 authors = [{ name = "Víctor Gómez", email = "mdsuanzes@gmail.com" }]
 license = "MIT"
 requires-python = ">=3.9"
@@ -13,4 +13,4 @@ requires-python = ">=3.9"
 dependencies = ["vira"]
 
 [tool.setuptools]
-py-modules = ["http_headers"]
+packages = ["vira_middlewares"]

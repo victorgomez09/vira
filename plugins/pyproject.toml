@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "vira_middleware_trusted_host"
+name = "vira_plugins"
 version = "0.1.0"
-description = "Trusted Host Middleware implementation for Vira."
+description = "Plugins implementation for Vira."
 authors = [{ name = "Víctor Gómez", email = "mdsuanzes@gmail.com" }]
 license = "MIT"
 requires-python = ">=3.9"
@@ -13,4 +13,4 @@ requires-python = ">=3.9"
 dependencies = ["vira"]
 
 [tool.setuptools]
-py-modules = ["trusted_host"]
+packages = ["vira_plugins"]

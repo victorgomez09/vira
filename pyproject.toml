@@ -12,13 +12,6 @@ description = "A light and fast ASGI web framework"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.9"
-classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3",
-    "Topic :: Software Development :: Libraries :: Application Frameworks",
-    "Topic :: Internet :: WWW/HTTP :: ASGI :: Server",
-]
 keywords = ["asgi", "web", "framework", "http", "api"]
 dependencies = [
     # Dependencias de runtime para el framework core. (Vacío si solo usas built-ins).

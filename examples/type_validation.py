@@ -1,4 +1,4 @@
-# Add parent directory to path to import vira
+# Add parent directory to path to import virapi
 import os
 import sys
 from typing import Union
@@ -7,9 +7,9 @@ from pydantic import BaseModel
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from plugins.openapi.openapi import OpenAPIPlugin
-from vira.vira import Vira
-from vira.response import json_response
+from virapi_plugins.openapi import OpenAPIPlugin
+from virapi import Virapi
+from virapi.response import json_response
 
 class UserCreate(BaseModel):
     """Pydantic model for user creation with validation."""
@@ -17,11 +17,11 @@ class UserCreate(BaseModel):
     email: str
     age: int
 
-app = Vira()
+app = Virapi()
 app.add_plugin(
-    OpenAPIPlugin, 
-    title="Complete Vira example API",
-    description="This is a complete example API demonstrating Vira features.",
+    OpenAPIPlugin,
+    title="Complete Virapi example API",
+    description="This is a complete example API demonstrating Virapi features.",
     version="1.0.0",
 )
 

@@ -20,7 +20,7 @@ This class is typically used internally by the `Request.files()` method, but can
 ### 1. Parsing
 
 ```python
-from vira.multipart.parser import MultipartParser
+from virapi.multipart.parser import MultipartParser
 
 # Example: Get content_type header from request
 content_type = "multipart/form-data; boundary=----WebKitFormBoundaryABC123" 

@@ -20,10 +20,10 @@ The `ExceptionMiddleware` serves as a universal safety net, catching any unhandl
 ## Usage Example
 
 ```python
-from vira import Vira
-from vira.middleware.exception import ExceptionMiddleware
+from virapi import virapi
+from virapi.middleware.exception import ExceptionMiddleware
 
-app = Vira()
+app = virapi()
 
 # Recommended for development to see tracebacks
 app.add_middleware(ExceptionMiddleware(mode="debug"))

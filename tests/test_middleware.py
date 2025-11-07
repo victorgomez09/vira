@@ -1,5 +1,5 @@
 """
-Test suite for Vira middleware system.
+Test suite for virapi middleware system.
 
 This module tests the middleware framework including:
 - MiddlewareChain functionality
@@ -10,10 +10,10 @@ This module tests the middleware framework including:
 
 import pytest
 from typing import Callable, Awaitable
-from vira import Vira, Request, Response, text_response, json_response
-from vira.testing import TestClient, TestRequest
-from vira.middleware import MiddlewareChain
-from vira.middleware.builtin_middleware import (
+from virapi import virapi, Request, Response, text_response, json_response
+from virapi.testing import TestClient, TestRequest
+from virapi.middleware import MiddlewareChain
+from virapi.middleware.builtin_middleware import (
     CORSMiddleware,
     ExceptionMiddleware,
 )
@@ -137,8 +137,8 @@ class TestCustomMiddleware:
     """Test custom middleware creation and behavior."""
 
     def test_custom_middleware(self):
-        """Test custom middleware integrated into Vira app."""
-        app = Vira()
+        """Test custom middleware integrated into virapi app."""
+        app = virapi()
 
         # Custom middleware that adds a header
         async def add_header_middleware(
@@ -176,7 +176,7 @@ class TestCustomMiddleware:
 
     def test_middleware_short_circuit(self):
         """Test middleware that short-circuits the chain."""
-        app = Vira()
+        app = virapi()
 
         # Middleware that returns early without calling next
         async def auth_middleware(
@@ -214,7 +214,7 @@ class TestExceptionMiddleware:
 
     def test_exception_middleware_production_mode(self):
         """Test exception middleware in production mode."""
-        app = Vira()
+        app = virapi()
         app.add_middleware(ExceptionMiddleware(mode="production"))
 
         @app.get("/error")
@@ -234,7 +234,7 @@ class TestExceptionMiddleware:
 
     def test_exception_middleware_debug_mode(self):
         """Test exception middleware in debug mode."""
-        app = Vira()
+        app = virapi()
         app.add_middleware(ExceptionMiddleware(mode="debug"))
 
         @app.get("/error")
@@ -255,7 +255,7 @@ class TestExceptionMiddleware:
 
     def test_exception_middleware_no_exception(self):
         """Test that exception middleware doesn't interfere with normal responses."""
-        app = Vira()
+        app = virapi()
         app.add_middleware(ExceptionMiddleware(mode="debug"))
 
         @app.get("/normal")
@@ -275,7 +275,7 @@ class TestCORSMiddleware:
 
     def test_cors_middleware_basic(self):
         """Test basic CORS functionality."""
-        app = Vira()
+        app = virapi()
         app.add_middleware(
             CORSMiddleware(
                 allow_origins=["http://localhost:3000"],
@@ -309,7 +309,7 @@ class TestCORSMiddleware:
 
     def test_cors_middleware_wildcard_origin(self):
         """Test CORS with wildcard origin."""
-        app = Vira()
+        app = virapi()
         app.add_middleware(CORSMiddleware(allow_origins=["*"]))
 
         @app.get("/api/test")
@@ -328,7 +328,7 @@ class TestCORSMiddleware:
 
     def test_cors_middleware_credentials(self):
         """Test CORS with credentials."""
-        app = Vira()
+        app = virapi()
         app.add_middleware(
             CORSMiddleware(
                 allow_origins=["http://localhost:3000"],
@@ -353,7 +353,7 @@ class TestMiddlewareIntegration:
 
     def test_multiple_middleware_order(self):
         """Test that multiple middleware execute in correct order."""
-        app = Vira()
+        app = virapi()
 
         # Add middleware in order: Exception -> CORS -> Custom
         app.add_middleware(ExceptionMiddleware(mode="debug"))
@@ -383,7 +383,7 @@ class TestMiddlewareIntegration:
 
     def test_middleware_exception_handling(self):
         """Test that exception middleware catches errors from other middleware."""
-        app = Vira()
+        app = virapi()
 
         # Add exception middleware first
         app.add_middleware(ExceptionMiddleware(mode="debug"))
@@ -422,7 +422,7 @@ class TestMiddlewareIntegration:
 
     def test_middleware_with_path_parameters(self):
         """Test that middleware works correctly with path parameters."""
-        app = Vira()
+        app = virapi()
 
         # Middleware that logs the request path
         async def logging_middleware(

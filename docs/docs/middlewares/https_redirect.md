@@ -15,10 +15,10 @@ The middleware takes no configuration parameters.
 ## Usage Example
 
 ```python
-from vira import Vira
-from vira.middleware.https_redirect import HTTPSRedirectMiddleware
+from virapi import virapi
+from virapi.middleware.https_redirect import HTTPSRedirectMiddleware
 
-app = Vira()
+app = virapi()
 
 # Add the middleware before any route handlers or other processing
 # to ensure HTTP requests are immediately redirected.

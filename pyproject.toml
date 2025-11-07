@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "vira"
+name = "virapi"
 version = "0.1.0"
 authors = [
     {name = "Víctor Gómez", email = "mdsuanzes@gmail.com"}
@@ -34,19 +34,19 @@ validation = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/victorgomez09/vira"
-Repository = "https://github.com/victorgomez09/vira.git"
-Issues = "https://github.com/victorgomez09/vira/issues"
-Documentation = "https://github.com/victorgomez09/vira/blob/main/README.md"
+Homepage = "https://github.com/victorgomez09/virapi"
+Repository = "https://github.com/victorgomez09/virapi.git"
+Issues = "https://github.com/victorgomez09/virapi/issues"
+Documentation = "https://github.com/victorgomez09/virapi/blob/main/README.md"
 
 # -------------------------------------------------------------
 # NOTA CLAVE: La sección [project.scripts] está ELIMINADA.
-# Esto asegura que no se cree el comando 'vira' en este paquete.
+# Esto asegura que no se cree el comando 'virapi' en este paquete.
 # -------------------------------------------------------------
 
 [tool.setuptools.packages.find]
-# REGLA CLAVE: Solo incluir el paquete 'vira'.
+# REGLA CLAVE: Solo incluir el paquete 'virapi'.
 where = ["."]
-include = ["vira"] 
+include = ["virapi"] 
 # EXCLUIR todos los demás directorios.
 exclude = ["tests*", "examples*", "cli*", "middlewares*", "plugins*", "*.py"]

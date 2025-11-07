@@ -18,10 +18,10 @@ The `CORSMiddleware` handles [Cross-Origin Resource Sharing](https://developer.m
 ## Usage Example
 
 ```python
-from vira import Vira
-from vira.middleware.cors import CORSMiddleware
+from virapi import virapi
+from virapi.middleware.cors import CORSMiddleware
 
-app = Vira()
+app = virapi()
 
 app.add_middleware(
     CORSMiddleware(

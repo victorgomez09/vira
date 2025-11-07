@@ -15,10 +15,10 @@ The `CSPMiddleware` injects the **`Content-Security-Policy`** header into respon
 ## Usage Example
 
 ```python
-from vira import Vira
-from vira.middleware.csp import CSPMiddleware
+from virapi import virapi
+from virapi.middleware.csp import CSPMiddleware
 
-app = Vira()
+app = virapi()
 
 # 1. Report-Only Mode (Development/Monitoring)
 # A strict policy that logs violations but doesn't block them.

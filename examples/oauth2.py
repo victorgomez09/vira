@@ -1,8 +1,8 @@
 from plugins.oauth2.oauth2 import ViraOAuth2Plugin, oauth_session_required
-from vira import Vira
-from vira.response import text_response
+from virapi import Virapi
+from virapi.response import text_response
 
-app = Vira()
+app = Virapi()
 
 app.add_plugin(
     ViraOAuth2Plugin,

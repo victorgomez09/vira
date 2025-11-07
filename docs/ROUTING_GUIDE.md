@@ -1,12 +1,12 @@
-# Vira Routing Guide
+# virapi Routing Guide
 
-> **Complete Documentation**: This guide contains comprehensive documentation for all of Vira's routing features. For a quick overview, see the routing sections in `README.md`.
+> **Complete Documentation**: This guide contains comprehensive documentation for all of virapi's routing features. For a quick overview, see the routing sections in `README.md`.
 
-A comprehensive guide to Vira's advanced routing system including path parameters, type conversion, priority routing, and modular organization.
+A comprehensive guide to virapi's advanced routing system including path parameters, type conversion, priority routing, and modular organization.
 
 ## Overview
 
-Vira provides a powerful routing system inspired by FastAPI with the following key features:
+virapi provides a powerful routing system inspired by FastAPI with the following key features:
 
 - **Path Parameters**: Dynamic routes with automatic type conversion (int, str, float, uuid, path)
 - **Type Safety**: Automatic parameter conversion and injection into handler functions
@@ -22,10 +22,10 @@ Vira provides a powerful routing system inspired by FastAPI with the following k
 Define dynamic routes that capture URL segments as parameters:
 
 ```python
-from vira import Vira
+from virapi import virapi
 import uuid
 
-app = Vira()
+app = virapi()
 
 # String parameters (default type)
 @app.get("/users/{username}")
@@ -40,7 +40,7 @@ async def get_category(category: str):
 
 ### Supported Parameter Types
 
-Vira supports five parameter types with automatic conversion:
+virapi supports five parameter types with automatic conversion:
 
 #### 1. String Parameters (`str`)
 
@@ -126,7 +126,7 @@ async def get_versioned_user(version: str, user_id: int):
 
 ### Parameter Injection vs Request Access
 
-Vira offers two ways to access path parameters:
+virapi offers two ways to access path parameters:
 
 #### 1. Parameter Injection (Recommended)
 
@@ -154,9 +154,9 @@ async def get_user(request):
 Organize your application with modular routers:
 
 ```python
-from vira import Vira, APIRouter
+from virapi import virapi, APIRouter
 
-app = Vira()
+app = virapi()
 
 # Create a router for user-related routes
 users_router = APIRouter()
@@ -304,7 +304,7 @@ async def users_catchall(path: str):
 
 ## Performance Optimization
 
-Vira includes several performance optimizations for route matching:
+virapi includes several performance optimizations for route matching:
 
 ### Segment Count Pre-filtering
 
@@ -338,10 +338,10 @@ Path patterns are compiled once during route registration, not during matching.
 ### Complex Application Structure
 
 ```python
-from vira import Vira, APIRouter
+from virapi import virapi, APIRouter
 import uuid
 
-app = Vira()
+app = virapi()
 
 # API versioning
 v1_router = APIRouter(prefix="/api/v1")
@@ -465,7 +465,7 @@ async def get_user(user_id: int):
 
 ## Error Handling
 
-Vira automatically handles routing errors:
+virapi automatically handles routing errors:
 
 - **404 Not Found**: When no route matches the request path
 - **405 Method Not Allowed**: When route matches but method doesn't

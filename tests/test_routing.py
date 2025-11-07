@@ -1,13 +1,13 @@
 """
-Test suite for Vira routing system.
+Test suite for virapi routing system.
 Tests the Route, Router, APIRouter classes and decorator functionality.
 """
 
 import pytest
-from vira import Vira, APIRouter, Route, Request, Response
-from vira.response import text_response, json_response
-from vira.testing import TestClient, TestRequest
-from vira.testing.response import TestResponse
+from virapi import virapi, APIRouter, Route, Request, Response
+from virapi.response import text_response, json_response
+from virapi.testing import TestClient, TestRequest
+from virapi.testing.response import TestResponse
 
 
 class TestRoute:
@@ -117,14 +117,14 @@ class TestAPIRouter:
 
 
 class TestFastASGI:
-    """Test the Vira application with routing using TestClient."""
+    """Test the virapi application with routing using TestClient."""
 
     def test_fastasgi_creation(self):
-        app = Vira()
+        app = virapi()
         assert isinstance(app.api_router, APIRouter)
 
     def test_fastasgi_get_decorator(self):
-        app = Vira()
+        app = virapi()
 
         @app.get("/test")
         async def handler(request: Request):
@@ -135,7 +135,7 @@ class TestFastASGI:
         assert app.api_router.routes[0].methods == {"GET"}
 
     def test_fastasgi_include_router(self):
-        app = Vira()
+        app = virapi()
         api_router = APIRouter()
 
         @api_router.get("/users")
@@ -152,7 +152,7 @@ class TestFastASGI:
 
     def test_fastasgi_get_request(self):
         """Test GET request handling."""
-        app = Vira()
+        app = virapi()
 
         @app.get("/test")
         async def handler(request: Request):
@@ -166,7 +166,7 @@ class TestFastASGI:
 
     def test_fastasgi_post_request(self):
         """Test POST request handling."""
-        app = Vira()
+        app = virapi()
 
         @app.post("/echo")
         async def echo_handler(request: Request):
@@ -183,7 +183,7 @@ class TestFastASGI:
 
     def test_fastasgi_json_request(self):
         """Test JSON request handling."""
-        app = Vira()
+        app = virapi()
 
         @app.post("/json")
         async def json_handler(request: Request):
@@ -192,13 +192,13 @@ class TestFastASGI:
             return json_response({"received": data})
 
         client = TestClient(app)
-        test_data = {"name": "Vira", "version": "1.0"}
+        test_data = {"name": "virapi", "version": "1.0"}
         test_request = TestRequest().set_json_body(test_data)
         response: TestResponse = client.post("/json", test_request)
 
         assert response.status_code == 200
         response_data = response.json()
-        assert response_data["received"]["name"] == "Vira"
+        assert response_data["received"]["name"] == "virapi"
         assert response_data["received"]["version"] == "1.0"
 
 
@@ -207,7 +207,7 @@ class TestRouteMatching:
 
     def test_complex_routing_scenario(self):
         """Test a complex scenario with multiple routers."""
-        app = Vira()
+        app = virapi()
 
         # Main app routes
         @app.get("/")
@@ -266,7 +266,7 @@ class TestRouteMatching:
 
     def test_multiple_http_methods(self):
         """Test different HTTP methods on the same path."""
-        app = Vira()
+        app = virapi()
 
         @app.get("/resource")
         async def get_resource(request: Request):
@@ -321,7 +321,7 @@ class TestRouteMatching:
         assert data["deleted"] is True
 
         """Test query parameter handling."""
-        app = Vira()
+        app = virapi()
 
         @app.get("/search")
         async def search(request: Request):
@@ -332,24 +332,24 @@ class TestRouteMatching:
         client = TestClient(app)
 
         # Create request with query parameters
-        test_request = TestRequest().set_query_params(q="vira", limit="20")
+        test_request = TestRequest().set_query_params(q="virapi", limit="20")
         response = client.get("/search", test_request)
 
         assert response.status_code == 200
         data = response.json()
-        assert data["query"] == "vira"
+        assert data["query"] == "virapi"
         assert data["limit"] == 20
 
     def test_route_ordering_and_conflicts(self):
         """Test that routes are matched in the order they were defined."""
-        app = Vira()
+        app = virapi()
 
         # More specific route should be defined first
         @app.get("/api/health")
         async def health_check(request: Request):
             return text_response("healthy")
 
-        # Less specific route - note: Vira requires path parameters to be in handler signature
+        # Less specific route - note: virapi requires path parameters to be in handler signature
         @app.get("/api/{general:str}")
         async def general_api(request: Request, general: str):
             return text_response("general")
@@ -376,7 +376,7 @@ class TestPathParameterInjection:
 
     def test_string_parameter_injection(self):
         """Test injection of string path parameters."""
-        app = Vira()
+        app = virapi()
 
         @app.get("/users/{username:str}")
         async def get_user(request: Request, username: str):
@@ -390,7 +390,7 @@ class TestPathParameterInjection:
 
     def test_integer_parameter_injection(self):
         """Test injection of integer path parameters."""
-        app = Vira()
+        app = virapi()
 
         @app.get("/users/{user_id:int}")
         async def get_user_by_id(request: Request, user_id: int):
@@ -406,7 +406,7 @@ class TestPathParameterInjection:
 
     def test_float_parameter_injection(self):
         """Test injection of float path parameters."""
-        app = Vira()
+        app = virapi()
 
         @app.get("/products/{price:float}")
         async def get_product_by_price(request: Request, price: float):
@@ -422,7 +422,7 @@ class TestPathParameterInjection:
 
     def test_multiple_parameters_injection(self):
         """Test injection of multiple path parameters."""
-        app = Vira()
+        app = virapi()
 
         @app.get("/users/{user_id:int}/posts/{post_id:int}")
         async def get_user_post(request: Request, user_id: int, post_id: int):
@@ -445,7 +445,7 @@ class TestPathParameterInjection:
 
     def test_mixed_parameter_types(self):
         """Test injection of mixed parameter types."""
-        app = Vira()
+        app = virapi()
 
         @app.get("/store/{category:str}/item/{item_id:int}/price/{price:float}")
         async def get_item(request: Request, category: str, item_id: int, price: float):
@@ -470,7 +470,7 @@ class TestPathParameterInjection:
 
     def test_parameter_with_request_injection(self):
         """Test path parameters combined with Request injection."""
-        app = Vira()
+        app = virapi()
 
         @app.get("/api/{version:str}/users/{user_id:int}")
         async def versioned_user_api(request: Request, version: str, user_id: int):
@@ -495,7 +495,7 @@ class TestPathParameterInjection:
 
     def test_invalid_integer_parameter(self):
         """Test error handling for invalid integer parameters."""
-        app = Vira()
+        app = virapi()
 
         @app.get("/users/{user_id:int}")
         async def get_user_by_id(request: Request, user_id: int):
@@ -509,7 +509,7 @@ class TestPathParameterInjection:
 
     def test_invalid_float_parameter(self):
         """Test error handling for invalid float parameters."""
-        app = Vira()
+        app = virapi()
 
         @app.get("/products/{price:float}")
         async def get_product_by_price(request: Request, price: float):
@@ -523,7 +523,7 @@ class TestPathParameterInjection:
 
     def test_parameter_order_independence(self):
         """Test that parameter order in handler signature doesn't matter."""
-        app = Vira()
+        app = virapi()
 
         @app.get("/test/{param1:str}/{param2:int}")
         async def handler_param_order(request: Request, param2: int, param1: str):
@@ -540,7 +540,7 @@ class TestPathParameterInjection:
 
     def test_default_string_parameter_type(self):
         """Test that parameters without explicit type default to string."""
-        app = Vira()
+        app = virapi()
 
         @app.get("/items/{item_name}/{count}")  # No explicit :str type
         async def get_item(request: Request, item_name, count: str):
@@ -554,7 +554,7 @@ class TestPathParameterInjection:
 
     def test_param_type_mismatch(self):
         """Test that type mismatches raise ValueError during route registration."""
-        app = Vira()
+        app = virapi()
 
         # This should raise a ValueError when the decorator is applied
         with pytest.raises(

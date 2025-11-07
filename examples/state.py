@@ -1,8 +1,8 @@
-from vira.vira import Vira
-from vira.request import Request
-from vira.response import text_response
+from virapi import Virapi
+from virapi.request import Request
+from virapi.response import text_response
 
-app = Vira(initial_state={"counter": 0, "db_url": "sqlite:///db.sqlite"})
+app = Virapi(initial_state={"counter": 0, "db_url": "sqlite:///db.sqlite"})
 
 @app.get("/")
 async def index(request: Request):

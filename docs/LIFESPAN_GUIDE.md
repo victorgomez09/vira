@@ -1,6 +1,6 @@
-# Vira Lifespan Events Guide
+# virapi Lifespan Events Guide
 
-Vira supports ASGI lifespan events for managing application startup and shutdown tasks, similar to FastAPI. This allows you to run initialization code when your application starts and cleanup code when it shuts down.
+virapi supports ASGI lifespan events for managing application startup and shutdown tasks, similar to FastAPI. This allows you to run initialization code when your application starts and cleanup code when it shuts down.
 
 ## Overview
 
@@ -16,9 +16,9 @@ Lifespan events are useful for:
 ### 1. Using the `@app.on_event()` Decorator
 
 ```python
-from vira import Vira
+from virapi import virapi
 
-app = Vira()
+app = virapi()
 
 @app.on_event("startup")
 async def startup_event():
@@ -123,10 +123,10 @@ async def failing_shutdown():
 ```python
 import asyncio
 import time
-from vira import Vira
-from vira.response import json_response
+from virapi import virapi
+from virapi.response import json_response
 
-app = Vira()
+app = virapi()
 
 # Application state
 app.state = type('State', (), {})()
@@ -154,14 +154,14 @@ async def simulate_database_connection():
 async def root(request):
     uptime = time.time() - app.state.start_time
     return json_response({
-        "message": "Hello from Vira!",
+        "message": "Hello from virapi!",
         "uptime_seconds": uptime
     })
 ```
 
 ## Running with Uvicorn
 
-When you run your Vira application with uvicorn, the lifespan events will be automatically triggered:
+When you run your virapi application with uvicorn, the lifespan events will be automatically triggered:
 
 ```bash
 uvicorn main:app --reload
@@ -187,13 +187,13 @@ INFO:     Shutting down
 
 ## ASGI Lifespan Protocol
 
-Vira implements the [ASGI Lifespan Protocol](https://asgi.readthedocs.io/en/latest/specs/lifespan.html) specification. This means:
+virapi implements the [ASGI Lifespan Protocol](https://asgi.readthedocs.io/en/latest/specs/lifespan.html) specification. This means:
 
 1. The ASGI server sends a `lifespan.startup` message when the application should start
-2. Vira runs all startup handlers and responds with `lifespan.startup.complete`
+2. virapi runs all startup handlers and responds with `lifespan.startup.complete`
 3. HTTP requests are processed normally
 4. The ASGI server sends a `lifespan.shutdown` message when the application should stop
-5. Vira runs all shutdown handlers and responds with `lifespan.shutdown.complete`
+5. virapi runs all shutdown handlers and responds with `lifespan.shutdown.complete`
 
 ## Best Practices
 
@@ -226,9 +226,9 @@ asyncio.run(test_shutdown())
 
 ## Comparison with FastAPI
 
-Vira's lifespan events work similarly to FastAPI:
+virapi's lifespan events work similarly to FastAPI:
 
-| Feature | Vira | FastAPI |
+| Feature | virapi | FastAPI |
 |---------|----------|---------|
 | `@app.on_event("startup")` | ✅ | ✅ |
 | `@app.on_event("shutdown")` | ✅ | ✅ |
@@ -237,11 +237,11 @@ Vira's lifespan events work similarly to FastAPI:
 | Error handling | ✅ | ✅ |
 | ASGI lifespan protocol | ✅ | ✅ |
 
-This makes it easy to migrate between Vira and FastAPI applications.
+This makes it easy to migrate between virapi and FastAPI applications.
 
 ## Internal Startup Handlers
 
-Vira automatically registers some internal startup handlers:
+virapi automatically registers some internal startup handlers:
 
 ### Middleware Chain Building
 
@@ -253,7 +253,7 @@ The middleware chain building is automatically registered as the first startup h
 
 ```python
 # This happens automatically - no user action required
-app = Vira()
+app = virapi()
 
 @app.middleware()
 async def my_middleware(request, call_next):

@@ -21,8 +21,8 @@ The `APIRouter` class manages a collection of `Route` objects, organizing the ap
 ### 1. Basic Router Definition
 
 ```python
-from vira.routing import APIRouter
-from vira.response import text_response
+from virapi.routing import APIRouter
+from virapi.response import text_response
 
 user_router = APIRouter(prefix="/users")
 
@@ -38,10 +38,10 @@ async def create_user():
 ### 2. Router Inclusion in Main App
 
 ```python
-from vira import Vira
+from virapi import virapi
 # ... user_router defined above ...
 
-app = Vira()
+app = virapi()
 app.include_router(user_router) # Routes become accessible at /users and /users/
 ```
 

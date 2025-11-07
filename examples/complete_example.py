@@ -1,7 +1,7 @@
 """
-Vira Complete Example
+virapi Complete Example
 
-This example demonstrates the core features of Vira:
+This example demonstrates the core features of virapi:
 - Routing with path parameters
 - Query strings, form data, and file uploads
 - Middleware usage
@@ -14,18 +14,18 @@ To run this application:
 import sys
 import os
 
-# Add parent directory to path to import vira
+# Add parent directory to path to import virapi
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from vira_plugins.openapi import OpenAPIPlugin
-from vira import Vira, Request, APIRouter
-from vira.logger import Logger
-from vira.response import text_response, json_response
-from vira_middlewares.cors import CORSMiddleware
-from vira_middlewares.exception import ExceptionMiddleware
+from virapi_plugins.openapi import OpenAPIPlugin
+from virapi import Virapi, Request, APIRouter
+from virapi.logger import Logger
+from virapi.response import text_response, json_response
+from virapi_middlewares.cors import CORSMiddleware
+from virapi_middlewares.exception import ExceptionMiddleware
 
 # Create the main application
-app = Vira()
+app = Virapi()
 logger = Logger(name="complete_example", json_logs=False)
 
 # ============================================================================
@@ -33,8 +33,8 @@ logger = Logger(name="complete_example", json_logs=False)
 # ============================================================================
 app.add_plugin(
     OpenAPIPlugin, 
-    title="Complete Vira example API",
-    description="This is a complete example API demonstrating Vira features.",
+    title="Complete virapi example API",
+    description="This is a complete example API demonstrating virapi features.",
     version="1.0.0",
 )
 
@@ -75,7 +75,7 @@ async def home():
     """Welcome page."""
     return text_response(
         """
-🚀 Vira Complete Example
+🚀 virapi Complete Example
 
 Available endpoints:
 • GET  /users/{user_id}     - Get user by ID (path parameter)
@@ -271,7 +271,7 @@ async def api_info():
     """API information."""
     return json_response(
         {
-            "name": "Vira Complete API",
+            "name": "virapi Complete API",
             "version": "1.0.0",
             "endpoints": ["GET /api/health", "GET /api/info"],
         }

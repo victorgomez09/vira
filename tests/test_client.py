@@ -1,5 +1,5 @@
 """
-TestClient class for executing HTTP requests against Vira applications.
+TestClient class for executing HTTP requests against virapi applications.
 """
 
 import asyncio
@@ -11,19 +11,19 @@ from .response import TestResponse
 
 class TestClient:
     """
-    HTTP test client for Vira applications.
+    HTTP test client for virapi applications.
 
     Provides a clean interface for testing HTTP endpoints by executing
-    TestRequest objects against Vira applications and returning
+    TestRequest objects against virapi applications and returning
     TestResponse objects.
     """
 
     def __init__(self, app):
         """
-        Initialize TestClient with a Vira application.
+        Initialize TestClient with a virapi application.
 
         Args:
-            app: Vira application instance
+            app: virapi application instance
         """
         self.app = app
 

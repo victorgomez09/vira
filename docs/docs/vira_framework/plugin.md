@@ -1,15 +1,15 @@
-# Vira Plugin Base
+# virapi Plugin Base
 
 ## Overview
 
-The `ViraPlugin` class provides the base interface for extending the functionality of the core `Vira` application. It follows a simple pattern: initialization with a reference to the main application and a required `register()` method for setup logic.
+The `ViraPlugin` class provides the base interface for extending the functionality of the core `virapi` application. It follows a simple pattern: initialization with a reference to the main application and a required `register()` method for setup logic.
 
 ## Key Component
 
 | Component | Description |
 | :--- | :--- |
-| **`ViraPlugin`** (Class) | The abstract base class that all Vira extensions must inherit from. |
-| **`self.app`** | A reference to the main `Vira` application instance, granting access to its state, router, and middleware chain. |
+| **`ViraPlugin`** (Class) | The abstract base class that all virapi extensions must inherit from. |
+| **`self.app`** | A reference to the main `virapi` application instance, granting access to its state, router, and middleware chain. |
 | **`register()`** | An abstract method that *must* be implemented by the subclass. This is where all setup (adding routes, middleware, or event handlers) should occur. |
 
 ## How to Use
@@ -19,9 +19,9 @@ The `ViraPlugin` class provides the base interface for extending the functionali
 Subclass `ViraPlugin` and implement the `register` method.
 
 ```python
-from vira.plugin import ViraPlugin
-from vira.response import json_response
-from vira.request import Request
+from virapi.plugin import ViraPlugin
+from virapi.response import json_response
+from virapi.request import Request
 
 class HealthCheckPlugin(ViraPlugin):
     """Adds a /health route to the application."""
@@ -45,10 +45,10 @@ class HealthCheckPlugin(ViraPlugin):
 Register the plugin class (not an instance) with the main application.
 
 ```python
-from vira import Vira
+from virapi import virapi
 # ... HealthCheckPlugin defined above ...
 
-app = Vira()
+app = virapi()
 app.add_plugin(HealthCheckPlugin) 
 # The plugin is now initialized and its register() method has been called.
 ```
@@ -56,4 +56,4 @@ app.add_plugin(HealthCheckPlugin)
 ## Implementation Notes
 - Registration Timing: Plugins must be added before the application starts (before the middleware chain is built). An internal check ensures this.
 
-- Dependency Injection: The Vira application is automatically passed to the plugin's __init__ method, giving the plugin full access to modify and extend the application instance.
+- Dependency Injection: The virapi application is automatically passed to the plugin's __init__ method, giving the plugin full access to modify and extend the application instance.

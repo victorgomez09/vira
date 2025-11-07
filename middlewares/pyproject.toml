@@ -3,14 +3,14 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "vira_middlewares"
+name = "virapi_middlewares"
 version = "0.1.0"
-description = "Middlewares implementation for Vira."
+description = "Middleware implementation for Virapi."
 authors = [{ name = "Víctor Gómez", email = "mdsuanzes@gmail.com" }]
 license = "MIT"
 requires-python = ">=3.9"
 
-dependencies = ["vira"]
+dependencies = ["virapi"]
 
 [tool.setuptools]
-packages = ["vira_middlewares"]
+packages = ["virapi_middlewares"]

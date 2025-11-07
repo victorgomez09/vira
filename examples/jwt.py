@@ -1,10 +1,10 @@
 from plugins.jwt.base import User
 from plugins.jwt.decorators import jwt_authenticated_only, jwt_requires_role
 from plugins.jwt.jwt import ViraJWTAuthPlugin
-from vira import Vira
-from vira.response import text_response
+from virapi import Virapi
+from virapi.response import text_response
 
-app = Vira()
+app = Virapi()
 
 app.add_plugin(
     ViraJWTAuthPlugin, 

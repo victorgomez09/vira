@@ -22,11 +22,11 @@ The middleware will only compress a response if all the following are true:
 ## Usage Example
 
 ```python
-from vira import Vira
-from vira.middleware.g_zip import GZipMiddleware
-from vira.response import json_response
+from virapi import virapi
+from virapi.middleware.g_zip import GZipMiddleware
+from virapi.response import json_response
 
-app = Vira()
+app = virapi()
 
 # Compress all responses larger than 1KB (1024 bytes)
 app.add_middleware(

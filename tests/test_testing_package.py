@@ -1,5 +1,5 @@
 """
-Comprehensive tests for the Vira testing package.
+Comprehensive tests for the virapi testing package.
 
 These tests verify that TestClient produces correct results by comparing
 with live HTTP server responses using the 'requests' library.
@@ -13,16 +13,16 @@ import pytest
 import requests
 import uvicorn
 
-from vira import Vira, Request
-from vira.response import json_response
-from vira.testing import TestClient, TestRequest
+from virapi import virapi, Request
+from virapi.response import json_response
+from virapi.testing import TestClient, TestRequest
 
 
 class TestApp:
-    """Test Vira application with various endpoints for testing."""
+    """Test virapi application with various endpoints for testing."""
 
     def __init__(self):
-        self.app = Vira()
+        self.app = virapi()
         self._setup_routes()
 
     def _setup_routes(self):
@@ -121,9 +121,9 @@ class TestApp:
 
 
 class LiveServerHelper:
-    """Helper for managing a live Vira server during tests."""
+    """Helper for managing a live virapi server during tests."""
 
-    def __init__(self, app: Vira, host: str = "127.0.0.1", port: int = 8765):
+    def __init__(self, app: virapi, host: str = "127.0.0.1", port: int = 8765):
         self.app = app
         self.host = host
         self.port = port
@@ -189,7 +189,7 @@ class TestTestingPackage:
 
     @pytest.fixture
     def test_app(self):
-        """Create test Vira application."""
+        """Create test virapi application."""
         return TestApp().app
 
     @pytest.fixture

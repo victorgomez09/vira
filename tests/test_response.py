@@ -1,5 +1,5 @@
 """
-Focused unit tests for Vira Response class.
+Focused unit tests for virapi Response class.
 
 Each test method verifies exactly one specific behavior to follow the Single Responsibility Principle.
 """
@@ -7,14 +7,14 @@ Each test method verifies exactly one specific behavior to follow the Single Res
 import json
 import pytest
 from datetime import datetime
-from vira.response import (
+from virapi.response import (
     Response,
     text_response,
     html_response,
     json_response,
     redirect_response,
 )
-from vira.status import HTTPStatus
+from virapi.status import HTTPStatus
 
 
 class TestResponseInitialization:
@@ -355,5 +355,5 @@ class TestResponseEdgeCases:
 
 
 if __name__ == "__main__":
-    print("Running focused Vira Response unit tests...")
+    print("Running focused virapi Response unit tests...")
     print("Use: pytest test_response.py -v for detailed output")

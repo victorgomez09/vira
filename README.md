@@ -1,4 +1,4 @@
-# Vira 🚀
+# virapi 🚀
 
 A lightweight and fast ASGI web framework built from scratch with FastAPI-inspired design.
 
@@ -16,13 +16,13 @@ A lightweight and fast ASGI web framework built from scratch with FastAPI-inspir
 ## 🚀 Quick Start
 
 ```python
-from vira import Vira, json_response
+from virapi import Virapi, json_response
 
-app = Vira()
+app = Virapi()
 
 @app.get("/")
 async def home(request):
-    return json_response({"message": "Hello, Vira!"})
+    return json_response({"message": "Hello, virapi!"})
 
 @app.get("/users/{user_id:int}")
 async def get_user(user_id: int, request):
@@ -34,8 +34,8 @@ async def get_user(user_id: int, request):
 ## 🏗️ Architecture Overview
 
 ```
-vira/
-├── vira.py          # Main application class
+virapi/
+├── virapi.py          # Main application class
 ├── request/             # Request handling & file uploads
 ├── response.py          # Response building & content types
 ├── routing/             # Advanced routing system
@@ -55,8 +55,8 @@ vira/
 
 ```bash
 # Clone the repository
-git clone https://github.com/victorgomez09/vira.git
-cd vira
+git clone https://github.com/victorgomez09/virapi.git
+cd virapi
 
 # Install development dependencies
 pip install -e ".[dev]"

@@ -20,8 +20,8 @@ The `MiddlewareChain` class is responsible for managing a list of middleware fun
 A middleware is an async function that accepts a `request` and an async `call_next` function.
 
 ```python
-from vira.request import Request
-from vira.response import Response
+from virapi.request import Request
+from virapi.response import Response
 
 async def timer_middleware(request: Request, call_next):
     # 1. Pre-process logic (before the next handler is called)
@@ -38,11 +38,11 @@ async def timer_middleware(request: Request, call_next):
 
 
 ### 2. Building the Chain
-The main Vira application handles the building process internally, but here's how the logic works:
+The main virapi application handles the building process internally, but here's how the logic works:
 
 ```python
-from vira.middleware_chain import MiddlewareChain
-from vira.response import text_response
+from virapi.middleware_chain import MiddlewareChain
+from virapi.response import text_response
 
 async def final_handler(request):
     return text_response("Endpoint hit")

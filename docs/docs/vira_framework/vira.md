@@ -1,14 +1,14 @@
-# Vira Application Core
+# virapi Application Core
 
 ## Overview
 
-The `Vira` class is the main entry point for the ASGI application. It serves as the framework's core, responsible for managing application lifecycle events (`startup`/`shutdown`), configuring global settings, building the middleware chain, and routing incoming requests.
+The `virapi` class is the main entry point for the ASGI application. It serves as the framework's core, responsible for managing application lifecycle events (`startup`/`shutdown`), configuring global settings, building the middleware chain, and routing incoming requests.
 
 ## Key Components
 
 | Component | Description |
 | :--- | :--- |
-| **`Vira`** (Class) | The ASGI callable object that implements the core application logic. |
+| **`virapi`** (Class) | The ASGI callable object that implements the core application logic. |
 | **`api_router`** | An instance of `APIRouter` used to manage all application routes. |
 | **`middleware_chain`** | An instance of `MiddlewareChain` used to construct the request processing pipeline. |
 | **`state`** | An instance of `State` used for application-level, thread-safe data storage. |
@@ -18,10 +18,10 @@ The `Vira` class is the main entry point for the ASGI application. It serves as 
 ### 1. Initialization and Configuration
 
 ```python
-from vira import Vira
+from virapi import virapi
 
 # Max file size in memory (before using disk) and temp directory can be configured
-app = Vira(
+app = virapi(
     max_in_memory_file_size=2 * 1024 * 1024, # 2MB
     temp_dir="/tmp/vira_uploads"
 )
@@ -31,12 +31,12 @@ app = Vira(
 Use the convenience decorators to define handlers.
 
 ```python
-from vira.request import Request
-from vira.response import json_response
+from virapi.request import Request
+from virapi.response import json_response
 
 @app.get("/")
 async def homepage(request: Request):
-    return json_response({"message": "Hello, Vira!"})
+    return json_response({"message": "Hello, virapi!"})
 
 @app.post("/users")
 async def create_user(request: Request):
@@ -47,8 +47,8 @@ async def create_user(request: Request):
 ### 3. Middleware, Plugins, and Events
 
 ```python
-from vira.middleware_chain import MiddlewareCallable
-from vira.plugin import ViraPlugin
+from virapi.middleware_chain import MiddlewareCallable
+from virapi.plugin import ViraPlugin
 import asyncio
 
 # Add Middleware

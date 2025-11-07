@@ -1,6 +1,6 @@
-# Vira Middleware Architecture Guide
+# virapi Middleware Architecture Guide
 
-This guide provides an in-depth look at Vira's middleware system, its architecture, implementation decisions, and best practices.
+This guide provides an in-depth look at virapi's middleware system, its architecture, implementation decisions, and best practices.
 
 ## Table of Contents
 
@@ -15,7 +15,7 @@ This guide provides an in-depth look at Vira's middleware system, its architectu
 
 ## Architecture Overview
 
-Vira's middleware system is built around the concept of a middleware chain that creates a processing pipeline for HTTP requests and responses. The system is designed to be:
+virapi's middleware system is built around the concept of a middleware chain that creates a processing pipeline for HTTP requests and responses. The system is designed to be:
 
 - **Simple**: Easy to understand and use
 - **Flexible**: Supports various middleware patterns
@@ -25,8 +25,8 @@ Vira's middleware system is built around the concept of a middleware chain that 
 ### Core Components
 
 ```
-Vira Application
-├── MiddlewareChain (vira/middleware/middlewarechain.py)
+virapi Application
+├── MiddlewareChain (virapi/middleware/middlewarechain.py)
 │   ├── middleware_list: List[MiddlewareCallable]
 │   └── build() -> Callable - Builds the middleware chain
 ├── Middleware Functions (async callables)
@@ -40,7 +40,7 @@ Vira Application
 
 ### MiddlewareChain Class
 
-Located in `vira/middleware/middlewarechain.py`, the `MiddlewareChain` class manages middleware registration and chain building:
+Located in `virapi/middleware/middlewarechain.py`, the `MiddlewareChain` class manages middleware registration and chain building:
 
 ```python
 class MiddlewareChain:
@@ -86,13 +86,13 @@ The middleware chain is built by creating nested function calls:
 
 ### When the Chain is Built
 
-Vira builds the middleware chain **once when middleware is added**, not for every request. The chain is rebuilt only when the middleware configuration changes during application setup.
+virapi builds the middleware chain **once when middleware is added**, not for every request. The chain is rebuilt only when the middleware configuration changes during application setup.
 
 #### Chain Building Lifecycle
 
 ```python
 # 1. Application initialization
-app = Vira()  # Empty chain created
+app = virapi()  # Empty chain created
 
 # 2. Middleware registration (chain rebuilt each time)
 app.add_middleware(middleware_a)  # Chain: [A] -> router
@@ -175,7 +175,7 @@ async def stateful_middleware(request, call_next):
     return response
 ```
 
-### Implementation in Vira.add_middleware()
+### Implementation in virapi.add_middleware()
 
 ```python
 def add_middleware(self, middleware_func: Callable) -> None:
@@ -260,7 +260,7 @@ async def database_middleware(request, call_next):
 
 ### Optimized Chain Building
 
-As of the latest version, Vira has been optimized for better performance:
+As of the latest version, virapi has been optimized for better performance:
 
 - **Startup Building**: The middleware chain is built once during application startup, not on every request
 - **No Runtime Rebuilding**: Middleware cannot be added after the application has started
@@ -268,12 +268,12 @@ As of the latest version, Vira has been optimized for better performance:
 
 ### Testing Considerations
 
-When writing tests for Vira applications with middleware, you may need to manually build the middleware chain since tests don't go through the normal ASGI startup process:
+When writing tests for virapi applications with middleware, you may need to manually build the middleware chain since tests don't go through the normal ASGI startup process:
 
 ```python
 @pytest.mark.asyncio
 async def test_middleware_functionality():
-    app = Vira()
+    app = virapi()
 
     @app.middleware()
     async def test_middleware(request, call_next):
@@ -303,8 +303,8 @@ This section covers advanced middleware patterns commonly used in production app
 
 **Required imports for examples:**
 ```python
-from vira import Vira, Request
-from vira.response import json_response, Response
+from virapi import virapi, Request
+from virapi.response import json_response, Response
 import time
 import uuid
 import logging

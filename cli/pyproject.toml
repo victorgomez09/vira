@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "vira-cli"
+name = "virapi-cli"
 version = "0.1.0"
-description = "Command Line Interface (CLI) for the Vira ASGI framework."
+description = "Command Line Interface (CLI) for the virapi ASGI framework."
 authors = [
     {name = "Víctor Gómez", email = "mdsuanzes@gmail.com"}
 ]
@@ -14,12 +14,12 @@ readme = "README.md"
 requires-python = ">=3.9"
 
 dependencies = [
-    "vira", # El paquete core del framework
+    "virapi", # El paquete core del framework
     "uvicorn>=0.20.0",
 ]
 
 [project.scripts]
-vira = "vira_cli:main"
+virapi = "virapi_cli:main"
 
 [tool.setuptools]
-py-modules = ["vira_cli"]
+py-modules = ["virapi_cli"]

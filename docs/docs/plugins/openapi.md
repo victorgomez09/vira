@@ -1,4 +1,4 @@
-# Vira OpenAPI Plugin (API Documentation)
+# virapi OpenAPI Plugin (API Documentation)
 
 The `ViraOpenAPIPlugin` automatically generates the **OpenAPI (Swagger)** specification for your application's routes and serves the interactive documentation user interface.
 
@@ -8,7 +8,7 @@ The plugin introspects your application's `api_router` to gather all route infor
 
 | Parameter | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| **`title`** | `str` | `"Vira API"` | The main title of your documentation site. |
+| **`title`** | `str` | `"virapi API"` | The main title of your documentation site. |
 | **`version`** | `str` | `"1.0.0"` | The version of the API. |
 | **`openapi_path`** | `str` | `"/openapi.json"` | The endpoint serving the raw OpenAPI JSON specification. |
 | **`docs_path`** | `str` | `"/docs"` | The endpoint serving the interactive **Swagger UI**. |
@@ -18,16 +18,16 @@ The plugin introspects your application's `api_router` to gather all route infor
 ```python
 # app.py
 
-from vira import Vira
+from virapi import virapi
 from plugins.openapi.openapi import ViraOpenAPIPlugin
-from vira.response import json_response
+from virapi.response import json_response
 
-app = Vira()
+app = virapi()
 
 # 1. Register the plugin
 app.add_plugin(
     ViraOpenAPIPlugin,
-    title="Core Vira Microservice",
+    title="Core virapi Microservice",
     version="1.5.0",
 )
 

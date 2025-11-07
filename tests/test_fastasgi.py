@@ -1,8 +1,8 @@
 """
-Tests for Vira core application class and ASGI protocol compliance.
+Tests for virapi core application class and ASGI protocol compliance.
 
 This module tests the fundamental ASGI interface implementation and core
-application functionality of the Vira framework, including:
+application functionality of the virapi framework, including:
 
 - ASGI 3.0 protocol compliance (HTTP protocol)
 - Unsupported protocol handling (WebSocket rejection)
@@ -12,22 +12,22 @@ protocol compliance without depending on the TestClient framework.
 """
 
 import pytest
-from vira import Vira, Response, Request
+from virapi import virapi, Response, Request
 
 
 class TestFastASGICore:
-    """Test core Vira application functionality."""
+    """Test core virapi application functionality."""
 
     @pytest.mark.asyncio
     async def test_asgi_interface_compliance(self):
-        """Test that Vira implements ASGI interface correctly."""
-        app = Vira()
+        """Test that virapi implements ASGI interface correctly."""
+        app = virapi()
 
         @app.get("/test")
         async def test_route(request: Request):
             return Response("OK")
 
-        # Vira builds middleware chain lazily on first HTTP request,
+        # virapi builds middleware chain lazily on first HTTP request,
         # but these tests bypass normal request flow, so we build it explicitly
         await app._build_middleware_chain()
 
@@ -64,7 +64,7 @@ class TestFastASGICore:
     @pytest.mark.asyncio
     async def test_unsupported_protocol(self):
         """Test handling of unsupported ASGI protocol types."""
-        app = Vira()
+        app = virapi()
 
         scope = {"type": "websocket"}  # Unsupported protocol
 
@@ -85,5 +85,5 @@ class TestFastASGICore:
 
 
 if __name__ == "__main__":
-    print("Running Vira core tests...")
+    print("Running virapi core tests...")
     pytest.main([__file__])

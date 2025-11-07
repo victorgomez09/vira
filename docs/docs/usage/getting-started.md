@@ -1,30 +1,30 @@
-# Vira Framework
+# virapi Framework
 
-The **Vira** framework is a simple, modern, and ASGI-compatible Python microframework, designed for educational purposes and lightweight API development.
+The **virapi** framework is a simple, modern, and ASGI-compatible Python microframework, designed for educational purposes and lightweight API development.
 
 ***
 
 ## 1. Getting Started: The Basic Application
 
-The core of a Vira application is a single `Vira` class instance, which acts as the main entry point and the central hub for routing, middleware, and state management.
+The core of a virapi application is a single `virapi` class instance, which acts as the main entry point and the central hub for routing, middleware, and state management.
 
 ### `main.py`
 
 ```python
 # main.py
-from vira import Vira
-from vira.response import text_response
-from vira.request import Request # Recommended for type hinting
+from virapi import virapi
+from virapi.response import text_response
+from virapi.request import Request # Recommended for type hinting
 
-# 1. Instantiate the Vira application
-app = Vira()
+# 1. Instantiate the virapi application
+app = virapi()
 
 # 2. Define a simple route using the @app.get decorator
 @app.get("/")
 async def homepage(request: Request):
     """The root endpoint of the API."""
     # Handlers must return a Response object
-    return text_response("Hello from Vira!")
+    return text_response("Hello from virapi!")
 
 # To run the application, use an ASGI server like Uvicorn:
 # $ uvicorn main:app
@@ -39,7 +39,7 @@ You can configure the application on initialization, managing resources like tem
 | initial_state | Optional[Dict] | None | Dictionary of initial, thread-safe values available via app.state. |
 
 ```python
-app = Vira(
+app = virapi(
     max_in_memory_file_size=5 * 1024 * 1024, # 5 MB in memory
     initial_state={"app_version": "1.0.0", "db_pool": None}
 )
@@ -47,7 +47,7 @@ app = Vira(
 
 
 ## 2. Routing and Dynamic Parameters
-Vira uses an APIRouter to register routes corresponding to HTTP methods.
+virapi uses an APIRouter to register routes corresponding to HTTP methods.
 
 ### Route Decorators and HTTP Methods
 Routes are registered using method-specific decorators:
@@ -100,9 +100,9 @@ Handler functions must be async as body parsing is an asynchronous operation.
 File uploads are handled via multipart/form-data. The parser uses temporary files for safety and memory efficiency.
 
 ```python
-from vira.request import Request
-from vira.response import json_response
-from vira.request.upload_file import UploadFile
+from virapi.request import Request
+from virapi.response import json_response
+from virapi.request.upload_file import UploadFile
 
 @app.post("/upload/document")
 async def handle_document_upload(request: Request):
@@ -142,8 +142,8 @@ Handlers must return an object of the Response class. Helper functions are provi
 | redirect_response(url, ...) | N/A (3xx status) | Redirects the client to a new URL. |
 
 ```python
-from vira.status import HTTPStatus
-from vira.response import json_response, redirect_response
+from virapi.status import HTTPStatus
+from virapi.response import json_response, redirect_response
 
 @app.get("/status")
 async def check_status():
@@ -165,10 +165,10 @@ Middleware are functions or classes that form an "onion" chain around your route
 ### Adding MiddlewareMiddleware are added to the ```app.middleware_chain```.
 
 ```python
-from vira.middleware.exception import ExceptionMiddleware # Handles errors
-from vira.middleware.cors import CORSMiddleware # Cross-Origin Resource Sharing
-from vira.middleware.g_zip import GZipMiddleware # Compresses responses
-from vira.middleware.trusted_host import TrustedHostMiddleware # Prevents host header attacks
+from virapi.middleware.exception import ExceptionMiddleware # Handles errors
+from virapi.middleware.cors import CORSMiddleware # Cross-Origin Resource Sharing
+from virapi.middleware.g_zip import GZipMiddleware # Compresses responses
+from virapi.middleware.trusted_host import TrustedHostMiddleware # Prevents host header attacks
 
 # The order matters! ExceptionMiddleware should be added first to catch errors from everything below it.
 app.middleware_chain.add(ExceptionMiddleware(mode="debug")) # Full tracebacks in debug mode
@@ -200,7 +200,7 @@ Example: Using State
 
 ```python
 # main.py - Setup
-app = Vira(initial_state={"request_count": 0})
+app = virapi(initial_state={"request_count": 0})
 
 # Middleware Example
 async def request_counter(request: Request, call_next):

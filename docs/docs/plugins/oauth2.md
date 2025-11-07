@@ -1,4 +1,4 @@
-# Vira OAuth2 Plugin (OAuth 2.0 Client & Flows)
+# virapi OAuth2 Plugin (OAuth 2.0 Client & Flows)
 
 The `ViraOAuth2Plugin` provides built-in support for common OAuth 2.0 authentication flows, primarily focusing on the **Authorization Code Flow with PKCE** for user web sessions and the **Client Credentials Flow** for machine-to-machine security.
 
@@ -21,10 +21,10 @@ The plugin must be configured with details for your external Identity Provider (
 ```python
 # app.py
 
-from vira import Vira
+from virapi import virapi
 from plugins.oauth2.oauth2 import ViraOAuth2Plugin
 
-app = Vira()
+app = virapi()
 
 app.add_plugin(
     ViraOAuth2Plugin,

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This module implements a custom logging configuration for the Vira framework, featuring two primary formatters: **`JSONFormatter`** for structured, machine-readable logs, and **`TextFormatter`** for human-readable, colored console output. The `Logger` class acts as a central facade to set up the logging system.
+This module implements a custom logging configuration for the virapi framework, featuring two primary formatters: **`JSONFormatter`** for structured, machine-readable logs, and **`TextFormatter`** for human-readable, colored console output. The `Logger` class acts as a central facade to set up the logging system.
 
 ## Key Components
 
@@ -19,11 +19,11 @@ This module implements a custom logging configuration for the Vira framework, fe
 The `Logger` class should be instantiated once, typically at application startup.
 
 ```python
-from vira.logger import Logger, logging
+from virapi.logger import Logger, logging
 
 # Initialize the logger with configuration
 app_logger = Logger().setup(
-    name="vira",
+    name="virapi",
     log_file="app.log",
     level=logging.INFO, # Only INFO and above to file
     json_logs=False, # Use TextFormatter for files
@@ -37,7 +37,7 @@ Use the returned standard Python logger instance.
 
 ```python
 # Get the configured logger
-log = logging.getLogger("vira")
+log = logging.getLogger("virapi")
 
 # Standard log messages
 log.info("Application starting up...")
@@ -45,7 +45,7 @@ log.error("Failed to connect to external service.", exc_info=True)
 
 # Logging with dynamic context (for JSONFormatter)
 log_record = log.makeRecord(
-    name="vira",
+    name="virapi",
     level=logging.INFO,
     fn="handler",
     lno=10,

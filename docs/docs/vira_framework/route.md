@@ -32,9 +32,9 @@ The type must be defined in the route path (e.g., `{user_id:int}`).
 | **`{filepath:multipath}`** | `str` | Matches the rest of the path, including slashes. |
 
 ```python
-from vira.route import Route
-from vira.response import json_response
-from vira.request import Request
+from virapi.route import Route
+from virapi.response import json_response
+from virapi.request import Request
 
 async def user_handler(user_id: int, request: Request):
     # user_id is automatically converted from str URL segment to int

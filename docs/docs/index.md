@@ -1,4 +1,4 @@
-# Vira 🚀
+# virapi 🚀
 
 A lightweight and fast ASGI web framework built from scratch with FastAPI-inspired design.
 

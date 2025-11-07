@@ -19,10 +19,10 @@ The `RateLimitMiddleware` protects your application from abuse or DDoS attacks b
 If `redis_client` is `None`, the middleware uses a simple in-memory dictionary. This mode is **not suitable for multi-process deployments** (like Uvicorn/Gunicorn with multiple workers) as limits are not shared.
 
 ```python
-from vira import Vira
-from vira.middleware.rate_limit import RateLimitMiddleware
+from virapi import virapi
+from virapi.middleware.rate_limit import RateLimitMiddleware
 
-app = Vira()
+app = virapi()
 # 10 requests per 60 seconds, non-distributed
 app.add_middleware(
     RateLimitMiddleware(
@@ -37,12 +37,12 @@ app.add_middleware(
 If a Redis client is passed, the middleware uses Redis's atomic operations for accurate, synchronized rate limiting across all worker processes.
 
 ```python
-from vira import Vira
-from vira.middleware.rate_limit import RateLimitMiddleware
+from virapi import virapi
+from virapi.middleware.rate_limit import RateLimitMiddleware
 # Assuming you have an async Redis client initialized
 # e.g., import redis.asyncio as redis; redis_client = redis.Redis(...) 
 
-app = Vira()
+app = virapi()
 app.add_middleware(
     RateLimitMiddleware(
         redis_client=your_redis_client_instance,

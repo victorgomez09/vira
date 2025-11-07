@@ -1,12 +1,12 @@
 """
-Unit tests for Vira Request class.
+Unit tests for virapi Request class.
 
 """
 
 import pytest
 from typing import Dict, Any, List, Optional
 
-from vira.request import Request
+from virapi.request import Request
 
 
 def create_mock_receive(body=b"", more_body=False):
@@ -946,5 +946,5 @@ class TestRequestStringRepresentation:
 
 
 if __name__ == "__main__":
-    print("Running focused Vira Request unit tests...")
+    print("Running focused virapi Request unit tests...")
     print("Use: pytest test_request_fixed.py -v for detailed output")

@@ -1,6 +1,6 @@
-# Vira v0.3.0 - Complete ASGI Framework with Advanced Routing
+# virapi v0.3.0 - Complete ASGI Framework with Advanced Routing
 
-A lightweight, educational ASGI framework built from scratch with FastAPI-style routing. Vira provides a clean, modern API for building web applications with decorators, request/response objects, and a powerful modular routing system.
+A lightweight, educational ASGI framework built from scratch with FastAPI-style routing. virapi provides a clean, modern API for building web applications with decorators, request/response objects, and a powerful modular routing system.
 
 ## Features
 
@@ -25,15 +25,15 @@ A lightweight, educational ASGI framework built from scratch with FastAPI-style 
 ### Basic Application
 
 ```python
-from vira import Vira, text_response, json_response
+from virapi import virapi, text_response, json_response
 
 # Create the application
-app = Vira()
+app = virapi()
 
 # Define routes using decorators
 @app.get("/")
 async def home(request):
-    return text_response("Welcome to Vira!")
+    return text_response("Welcome to virapi!")
 
 @app.get("/health")
 async def health_check(request):
@@ -52,10 +52,10 @@ async def echo(request):
 ### Modular API with Routers
 
 ```python
-from vira import Vira, APIRouter, json_response
+from virapi import virapi, APIRouter, json_response
 
 # Create main application
-app = Vira()
+app = virapi()
 
 # Create API router for user management
 users_router = APIRouter()
@@ -93,17 +93,17 @@ app.include_router(users_router, prefix="/api/users")
 
 ## Advanced Routing System
 
-Vira provides a powerful routing system with path parameters, type conversion, priority routing, and modular organization.
+virapi provides a powerful routing system with path parameters, type conversion, priority routing, and modular organization.
 
 ### Path Parameters with Type Conversion
 
 Define dynamic routes with automatic parameter extraction and type conversion:
 
 ```python
-from vira import Vira
+from virapi import virapi
 import uuid
 
-app = Vira()
+app = virapi()
 
 # String parameters (default type)
 @app.get("/users/{username}")
@@ -155,9 +155,9 @@ async def get_user_post(user_id: int, post_id: int):
 Organize your application with modular routers and prefixes:
 
 ```python
-from vira import Vira, APIRouter
+from virapi import virapi, APIRouter
 
-app = Vira()
+app = virapi()
 
 # Create routers with prefixes
 api_router = APIRouter(prefix="/api/v1")
@@ -244,7 +244,7 @@ app.include_router(users_router, prefix="/api")
 
 ### Performance Optimization
 
-Vira includes automatic performance optimizations:
+virapi includes automatic performance optimizations:
 
 - **Segment Count Pre-filtering**: Routes are quickly filtered by path segment count before expensive regex matching
 - **Priority-based Sorting**: Higher priority routes are checked first
@@ -253,14 +253,14 @@ Vira includes automatic performance optimizations:
 
 ## Middleware System
 
-Vira provides a powerful middleware system that allows you to add cross-cutting functionality to your application. Middleware executes in the same order as registration, allowing you to build a pipeline of request/response processing.
+virapi provides a powerful middleware system that allows you to add cross-cutting functionality to your application. Middleware executes in the same order as registration, allowing you to build a pipeline of request/response processing.
 
 ### Basic Middleware Usage
 
 ```python
-from vira import Vira, text_response, json_response
+from virapi import virapi, text_response, json_response
 
-app = Vira()
+app = virapi()
 
 # Simple logging middleware
 async def logging_middleware(request, call_next):
@@ -504,7 +504,7 @@ async def get_profile(request):
 ### Response Types
 
 ```python
-from vira import Response, text_response, html_response, json_response, redirect_response
+from virapi import Response, text_response, html_response, json_response, redirect_response
 
 @app.get("/examples")
 async def response_examples(request):
@@ -581,7 +581,7 @@ response.set_cookie(
 ## HTTP Methods Support
 
 ```python
-app = Vira()
+app = virapi()
 
 @app.get("/resource")
 async def get_resource(request):
@@ -616,7 +616,7 @@ async def options_resource(request):
 
 ## Error Handling
 
-Vira automatically handles common HTTP errors:
+virapi automatically handles common HTTP errors:
 
 ```python
 # Automatic 404 for unmatched routes
@@ -644,21 +644,21 @@ async def error_example(request):
 ### Development Setup
 
 ```bash
-# Clone or download the Vira framework
-cd vira-project
+# Clone or download the virapi framework
+cd virapi-project
 
 # Install ASGI server (uvicorn recommended)
 pip install uvicorn
 
 # Create your application
 # your_app.py
-from vira import Vira, text_response
+from virapi import virapi, text_response
 
-app = Vira()
+app = virapi()
 
 @app.get("/")
 async def home(request):
-    return text_response("Hello, Vira!")
+    return text_response("Hello, virapi!")
 
 # Run the application
 uvicorn your_app:app --reload --port 8000
@@ -681,15 +681,15 @@ daphne -b 0.0.0.0 -p 8000 your_app:app
 
 ## Lifespan Events
 
-Vira supports ASGI lifespan events for managing application startup and shutdown tasks, similar to FastAPI. This allows you to run initialization code when your application starts and cleanup code when it shuts down.
+virapi supports ASGI lifespan events for managing application startup and shutdown tasks, similar to FastAPI. This allows you to run initialization code when your application starts and cleanup code when it shuts down.
 
 ### Basic Usage
 
 ```python
-from vira import Vira
+from virapi import virapi
 import asyncio
 
-app = Vira()
+app = virapi()
 
 # Startup events - run when the application starts
 @app.on_event("startup")
@@ -713,7 +713,7 @@ async def cleanup():
 
 @app.get("/")
 async def root(request):
-    return {"message": "Hello from Vira with lifespan events!"}
+    return {"message": "Hello from virapi with lifespan events!"}
 ```
 
 ### Alternative Registration Method
@@ -782,16 +782,16 @@ See the `examples/` directory for complete examples:
 
 ### Complete Documentation
 
-- `ROUTING_GUIDE.md` - Comprehensive guide to Vira's advanced routing system
+- `ROUTING_GUIDE.md` - Comprehensive guide to virapi's advanced routing system
 - `MIDDLEWARE_GUIDE.md` - In-depth middleware architecture and implementation guide
 - `ROADMAP.md` - Future development plans
 
 ## Architecture
 
-Vira v0.3.0 uses a clean, modular architecture with advanced routing capabilities:
+virapi v0.3.0 uses a clean, modular architecture with advanced routing capabilities:
 
 ```
-Vira Application
+virapi Application
 ├── APIRouter (main router with prefix support)
 │   ├── Route objects (path + handler + methods + priority)
 │   │   ├── Path parameter extraction and type conversion
@@ -805,7 +805,7 @@ Vira Application
 
 ### Key Components
 
-- **Vira**: Main application class with ASGI protocol implementation and automatic route registration
+- **virapi**: Main application class with ASGI protocol implementation and automatic route registration
 - **APIRouter**: Route collection with decorators, prefix-based inclusion, and nested router support
 - **Route**: Individual route definition with path parameters, type conversion, priority, and optimized matching
 - **Request**: High-level request object with path parameters, query parameters, cookies, and easy data access
@@ -822,7 +822,7 @@ Vira Application
 ## HTTP Status Codes
 
 ```python
-from vira import HTTPStatus
+from virapi import HTTPStatus
 
 # Common status codes
 HTTPStatus.HTTP_200_OK                    # 200
@@ -851,12 +851,12 @@ python -m pytest tests/test_routing.py
 
 # Test with coverage
 pip install pytest-cov
-python -m pytest tests/ --cov=vira
+python -m pytest tests/ --cov=virapi
 ```
 
 ## Educational Purpose
 
-Vira is designed for learning how modern web frameworks work at a fundamental level:
+virapi is designed for learning how modern web frameworks work at a fundamental level:
 
 - **ASGI Protocol**: Understand async web server interfaces and application lifecycle
 - **Advanced Routing**: Learn how URL patterns, regex compilation, and path parameters work
@@ -879,21 +879,21 @@ MIT License - see LICENSE file for details.
 - Python 3.8+
 - ASGI server (uvicorn, hypercorn, daphne)
 
-Vira has no external dependencies - it's built using only Python standard library.
+virapi has no external dependencies - it's built using only Python standard library.
 
-## Testing Vira Applications
+## Testing virapi Applications
 
-When writing tests for Vira applications, especially those using middleware, you may need to manually build the middleware chain since tests don't go through the normal ASGI startup process.
+When writing tests for virapi applications, especially those using middleware, you may need to manually build the middleware chain since tests don't go through the normal ASGI startup process.
 
 ### Testing with Middleware
 
 ```python
 import pytest
-from vira import Vira, text_response
+from virapi import virapi, text_response
 
 @pytest.mark.asyncio
 async def test_app_with_middleware():
-    app = Vira()
+    app = virapi()
 
     @app.middleware()
     async def add_header(request, call_next):
@@ -934,6 +934,6 @@ async def test_app_with_middleware():
 
 ### Why Manual Chain Building?
 
-Vira optimizes performance by building the middleware chain once during application startup. In test environments, this startup process doesn't happen automatically, so you need to call `await app._build_middleware_chain()` manually after adding middleware but before making ASGI calls.
+virapi optimizes performance by building the middleware chain once during application startup. In test environments, this startup process doesn't happen automatically, so you need to call `await app._build_middleware_chain()` manually after adding middleware but before making ASGI calls.
 
 This ensures your tests accurately reflect the behavior of your application in production.

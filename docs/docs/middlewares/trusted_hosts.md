@@ -22,10 +22,10 @@ The `TrustedHostMiddleware` is a security measure that protects against HTTP Hos
 ## Usage Example
 
 ```python
-from vira import Vira
-from vira.middleware.trusted_host import TrustedHostMiddleware
+from virapi import virapi
+from virapi.middleware.trusted_host import TrustedHostMiddleware
 
-app = Vira()
+app = virapi()
 
 # Enforce host validation for production deployment
 app.add_middleware(

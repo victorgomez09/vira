@@ -1,4 +1,4 @@
-# Vira JWT AuthPlugin (JSON Web Token Authentication)
+# virapi JWT AuthPlugin (JSON Web Token Authentication)
 
 The `ViraJWTAuthPlugin` provides a robust, token-based authentication and role-based authorization mechanism using **JSON Web Tokens (JWT)**. It relies on the presence of a `Authorization: Bearer <token>` header in incoming requests.
 
@@ -16,10 +16,10 @@ The plugin must be registered during application startup by providing the essent
 ```python
 # app.py
 
-from vira import Vira
+from virapi import virapi
 from plugins.jwt.jwt import ViraJWTAuthPlugin
 
-app = Vira()
+app = virapi()
 
 # Register the plugin with your security configuration
 app.add_plugin(

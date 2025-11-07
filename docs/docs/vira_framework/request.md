@@ -21,8 +21,8 @@ The `Request` class is a high-level abstraction over the low-level ASGI `scope` 
 ### 1. Basic Access
 
 ```python
-from vira.request import Request
-from vira.response import text_response
+from virapi.request import Request
+from virapi.response import text_response
 
 async def handler(request: Request):
     method = request.method
@@ -71,4 +71,4 @@ async def handle_upload(request: Request):
 ## Implementation Notes
 - Lazy Body Parsing: The body is only read from the ASGI channel (via _receive_complete_message) and parsed (via json(), form(), etc.) when the corresponding method is called for the first time, improving performance for requests without a body.
 
-- Cleanup: The Request class maintains a weakref.WeakSet of active requests and ensures that all temporary UploadFile objects are cleaned up via a finalizer (__del__) or when the main Vira app explicitly calls cleanup_files().
+- Cleanup: The Request class maintains a weakref.WeakSet of active requests and ensures that all temporary UploadFile objects are cleaned up via a finalizer (__del__) or when the main virapi app explicitly calls cleanup_files().

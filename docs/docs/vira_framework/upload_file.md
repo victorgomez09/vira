@@ -23,7 +23,7 @@ You obtain instances of `UploadFile` from the `Request.files()` method.
 ### 1. Reading the File
 
 ```python
-from vira.request import Request
+from virapi.request import Request
 
 @app.post("/upload")
 async def process_file(request: Request):

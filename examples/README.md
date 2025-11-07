@@ -1,6 +1,6 @@
-# Vira Examples
+# virapi Examples
 
-This folder contains a comprehensive example demonstrating all core Vira features.
+This folder contains a comprehensive example demonstrating all core virapi features.
 
 ## complete_example.py
 
@@ -28,7 +28,7 @@ A single, comprehensive example that demonstrates:
 ### 🏃‍♂️ **Running the Example**
 
 ```bash
-# From the Vira root directory
+# From the virapi root directory
 uvicorn examples.complete_example:app --reload --port 8000
 ```
 
@@ -38,7 +38,7 @@ Then visit: http://localhost:8000
 
 This single example is designed to show you:
 
-1. How to set up a Vira application
+1. How to set up a virapi application
 2. Basic and advanced routing patterns
 3. Handling different types of request data
 4. Adding middleware for cross-cutting concerns

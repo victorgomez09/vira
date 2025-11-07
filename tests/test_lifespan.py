@@ -1,5 +1,5 @@
 """
-Tests for Vira lifespan event handling.
+Tests for virapi lifespan event handling.
 
 Tests the lifespan event registration and execution system,
 including ASGI protocol compliance and error handling.
@@ -7,7 +7,7 @@ including ASGI protocol compliance and error handling.
 
 import pytest
 from unittest.mock import AsyncMock
-from vira import Vira
+from virapi import virapi
 
 
 class TestLifespanEvents:
@@ -15,7 +15,7 @@ class TestLifespanEvents:
 
     def test_event_handler_registration(self):
         """Test both decorator and direct registration methods."""
-        app = Vira()
+        app = virapi()
 
         # Test startup registration
         @app.on_event("startup")
@@ -47,7 +47,7 @@ class TestLifespanEvents:
 
     def test_invalid_event_type_handling(self):
         """Test error handling for invalid event types."""
-        app = Vira()
+        app = virapi()
 
         # Test decorator
         with pytest.raises(ValueError, match="Invalid event type: invalid"):
@@ -66,7 +66,7 @@ class TestLifespanEvents:
     @pytest.mark.asyncio
     async def test_lifespan_protocol_startup(self):
         """Test ASGI lifespan protocol startup handling."""
-        app = Vira()
+        app = virapi()
         startup_called = False
 
         @app.on_event("startup")
@@ -86,7 +86,7 @@ class TestLifespanEvents:
     @pytest.mark.asyncio
     async def test_lifespan_protocol_shutdown(self):
         """Test ASGI lifespan protocol shutdown handling."""
-        app = Vira()
+        app = virapi()
         shutdown_called = False
 
         @app.on_event("shutdown")
@@ -106,7 +106,7 @@ class TestLifespanEvents:
     @pytest.mark.asyncio
     async def test_lifespan_startup_error_handling(self):
         """Test error handling in lifespan startup."""
-        app = Vira()
+        app = virapi()
 
         @app.on_event("startup")
         async def failing_handler():
@@ -125,7 +125,7 @@ class TestLifespanEvents:
     @pytest.mark.asyncio
     async def test_lifespan_shutdown_error_handling(self):
         """Test error handling in lifespan shutdown."""
-        app = Vira()
+        app = virapi()
 
         @app.on_event("shutdown")
         async def failing_handler():
@@ -147,7 +147,7 @@ class TestLifespanEvents:
         startup_order = []
         shutdown_order = []
 
-        app = Vira()
+        app = virapi()
 
         @app.on_event("startup")
         async def startup_1():

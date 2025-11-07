@@ -16,16 +16,16 @@ The state can be accessed via attribute access or dictionary-like methods.
 
 ### 1. Initialization and Access
 
-The `State` object is typically initialized by the `Vira` application, but can be manually initialized.
+The `State` object is typically initialized by the `virapi` application, but can be manually initialized.
 
 ```python
-from vira.state import State
+from virapi.state import State
 
 # Initialize with default data
-app_state = State({"app_name": "Vira App", "is_ready": False})
+app_state = State({"app_name": "virapi App", "is_ready": False})
 
 # Attribute access (Synchronous)
-print(app_state.app_name) # Output: Vira App
+print(app_state.app_name) # Output: virapi App
 
 # Dictionary-like access (Synchronous)
 app_state.set("counter", 0)
@@ -51,7 +51,7 @@ async def update_state(state: State):
     current_count = await state.aget("async_counter", 0)
     await state.aset("async_counter", current_count + 1)
 
-# Usage in a Vira lifecycle event
+# Usage in a virapi lifecycle event
 @app.on_event("startup")
 async def on_startup():
     await app.state.aset("db_connection", "connection_object")

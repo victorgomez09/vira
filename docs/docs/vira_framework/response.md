@@ -22,7 +22,7 @@ The `Response` class is used to construct the HTTP response sent back to the cli
 ### 1. Basic Response Construction
 
 ```python
-from vira.response import Response, json_response, HTTPStatus
+from virapi.response import Response, json_response, HTTPStatus
 
 # Standard way
 response = Response(
@@ -51,7 +51,7 @@ All other str content -> text/plain
 Use the set_cookie method on a Response instance.
 
 ```python
-from vira.response import text_response
+from virapi.response import text_response
 from datetime import datetime, timedelta
 
 response = text_response("Cookie set!")
@@ -75,7 +75,7 @@ response.set_cookie(
 ### 4. Redirects
 
 ```python
-from vira.response import redirect_response
+from virapi.response import redirect_response
 
 # 302 Found (Temporary Redirect)
 response = redirect_response("/new-path")

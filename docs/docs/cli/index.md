@@ -1,12 +1,12 @@
-# Vira CLI
+# virapi CLI
 
-This document describes how to use the Vira Command Line Interface (CLI) script to start and manage your Vira ASGI applications using Uvicorn.
+This document describes how to use the virapi Command Line Interface (CLI) script to start and manage your virapi ASGI applications using Uvicorn.
 
 ## 1. Overview
 
-The Vira CLI is designed to simplify the process of launching your application in either development or production mode, automatically handling Uvicorn configuration like host binding, port, and code hot-reloading.
+The virapi CLI is designed to simplify the process of launching your application in either development or production mode, automatically handling Uvicorn configuration like host binding, port, and code hot-reloading.
 
-The script expects your Vira application instance to be named app within the specified file (e.g., ```app = Vira()```).
+The script expects your virapi application instance to be named app within the specified file (e.g., ```app = virapi()```).
 
 ## 2. Prerequisites
 
@@ -23,7 +23,7 @@ The CLI supports two main subcommands: dev for development and run for productio
 General Syntax
 
 ```shell
-vira <command> [options]
+virapi <command> [options]
 ```
 
 ### 3.1. dev (Development Mode)
@@ -32,7 +32,7 @@ Use the dev command for local development. It automatically enables file watchin
 
 | Option | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| --app-file | str | app.py | Path to the file containing the Vira instance. |
+| --app-file | str | app.py | Path to the file containing the virapi instance. |
 | --port | int | 8000 | The port the server will listen on. |
 | --reload | bool | True | Enable/disable auto-reload on code changes. |
 
@@ -41,7 +41,7 @@ Use the dev command for local development. It automatically enables file watchin
 To run your application defined in main.py on port 8080 with auto-reload:
 
 ```shell
-vira dev --app-file main.py --port 8080
+virapi dev --app-file main.py --port 8080
 ```
 
 - Host Binding: Automatically binds to 127.0.0.1 (localhost).
@@ -53,7 +53,7 @@ Use the run command for deploying your application. It disables auto-reload and 
 
 | Option | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| --app-file | str | app.py | Path to the file containing the Vira instance. |
+| --app-file | str | app.py | Path to the file containing the virapi instance. |
 | --port | int | 8000 | The port the server will listen on. |
 
 Example Usage (Production)
@@ -61,7 +61,7 @@ Example Usage (Production)
 To run your application defined in app.py on port 8000 for public access:
 
 ```shell
-vira run
+virapi run
 ```
 
 - Host Binding: Automatically binds to 0.0.0.0 (accessible from outside the local machine/container).
@@ -69,7 +69,7 @@ vira run
 
 ## 4. How the CLI Works (Internal Logic)
 
-The script performs two critical steps to ensure Uvicorn can find and run your Vira application:
+The script performs two critical steps to ensure Uvicorn can find and run your virapi application:
 
 - Application String Formatting: The find_app_string function takes the provided ```--app-file``` (e.g., main.py) and converts it to the Uvicorn-required format: ```module:app_object``` (e.g., ```main:app```). This tells Uvicorn to look for an object named app inside the main module.
 

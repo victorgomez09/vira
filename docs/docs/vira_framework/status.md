@@ -15,8 +15,8 @@ This module provides a comprehensive list of standard HTTP status codes wrapped 
 Simply import `HTTPStatus` and use its members for response status codes. It automatically converts to an integer when passed to the `Response` class.
 
 ```python
-from vira.status import HTTPStatus
-from vira.response import text_response, json_response
+from virapi.status import HTTPStatus
+from virapi.response import text_response, json_response
 
 # 200 Success
 response_ok = text_response("OK", status_code=HTTPStatus.HTTP_200_OK)

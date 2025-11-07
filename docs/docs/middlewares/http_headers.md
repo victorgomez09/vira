@@ -26,10 +26,10 @@ The middleware includes these headers by default:
 ## Usage Example
 
 ```python
-from vira import Vira
-from vira.middleware.http_headers import HttpHeadersMiddleware
+from virapi import virapi
+from virapi.middleware.http_headers import HttpHeadersMiddleware
 
-app = Vira()
+app = virapi()
 
 # 1. Default Setup (recommended for most apps)
 app.add_middleware(HttpHeadersMiddleware())

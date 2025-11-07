@@ -73,5 +73,5 @@ nav:
     - JWT: plugins/jwt.md
     - Oauth2: plugins/oauth2.md
     - OpenAPI: plugins/openapi.md
-  - CLI: 
+  - CLI: cli/index.md
   - Roadmap: roadmap/index.md
